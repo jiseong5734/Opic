@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OPIc 스피킹 트레이너</title>
+<meta name="theme-color" content="#14213d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14213d;--ink2:#3d4a66;--mute:#7a8399;--line:#e4e1d8;--paper:#fbf8f1;--card:#fff;--accent:#e8743b;--accent2:#fbe3d4;--teal:#2f8f83;--teal2:#dcefeb;--hl:#fff1a8;--bad:#c94a4a;--good:#2f8f83;--r:16px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:"IBM Plex Sans KR",system-ui,sans-serif;font-size:16px;line-height:1.55}
+body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.wrap{max-width:720px;margin:0 auto;padding:18px 16px 110px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 18px}
+.brand{font-family:Fraunces,serif;font-weight:800;font-size:24px;letter-spacing:-.5px}
+.brand span{color:var(--accent)}
+.sub{color:var(--mute);font-size:13px}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:#fffdf8ee;backdrop-filter:blur(8px);border-top:1px solid var(--line);display:flex;justify-content:center;gap:6px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:20}
+.tabs button{flex:1;max-width:200px;padding:9px 6px;border-radius:12px;font-weight:600;font-size:14px;color:var(--mute)}
+.tabs button.on{background:var(--ink);color:#fff}
+.hero{background:var(--ink);color:#fff;border-radius:22px;padding:22px 20px;position:relative;overflow:hidden;margin-bottom:18px}
+.hero h1{font-family:Fraunces,serif;font-size:28px;line-height:1.15;margin:0 0 8px}
+.hero p{margin:0;color:#c9d0e0;font-size:14px}
+.hero .dots{position:absolute;right:-30px;top:-30px;width:150px;height:150px;border-radius:50%;background:var(--accent);opacity:.9}
+.hero .dots2{position:absolute;right:50px;bottom:-60px;width:110px;height:110px;border-radius:50%;background:var(--teal);opacity:.8}
+.hero > *{position:relative}
+.stat{display:flex;gap:10px;margin-top:16px}
+.stat div{background:#ffffff18;border-radius:12px;padding:8px 12px;font-size:12px;color:#c9d0e0}
+.stat b{display:block;color:#fff;font-size:18px}
+h2.sec{font-size:15px;margin:22px 2px 10px;color:var(--ink2);display:flex;align-items:center;gap:8px}
+h2.sec small{color:var(--mute);font-weight:400}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.topic{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;text-align:left;transition:transform .12s}
+.topic:active{transform:scale(.98)}
+.topic .tn{font-weight:700;font-size:15px}
+.topic .tc{font-size:12px;color:var(--mute);margin-top:2px}
+.bar{height:5px;background:#eee8dc;border-radius:5px;margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--teal);border-radius:5px}
+.kind{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:20px;background:var(--teal2);color:var(--teal)}
+.kind.c{background:var(--accent2);color:var(--accent)}
+.kind.r{background:#e6e3f5;color:#5b4fa8}
+.list{display:flex;flex-direction:column;gap:8px}
+.qrow{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;text-align:left;display:flex;gap:12px;align-items:flex-start}
+.qrow .num{flex:none;width:28px;height:28px;border-radius:50%;background:var(--paper);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--ink2)}
+.qrow.done .num{background:var(--teal);color:#fff}
+.qrow .qk{font-weight:600;font-size:14.5px}
+.lv{font-size:11px;font-weight:700;padding:1px 6px;border-radius:6px;margin-right:6px;vertical-align:1px}
+.lv.Int{background:#e8f0fb;color:#3a63a8}.lv.Adv{background:var(--accent2);color:var(--accent)}
+.gen{font-size:11px;color:var(--mute);margin-left:4px}
+.back{font-size:14px;color:var(--ink2);font-weight:600;padding:6px 0;margin-bottom:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:12px}
+.qtitle{font-weight:700;font-size:17px;margin:6px 0 10px}
+.qen{font-size:15px;color:var(--ink2);background:var(--paper);border-radius:12px;padding:12px 14px;transition:filter .2s}
+.qen.hide{filter:blur(6px);user-select:none}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{padding:9px 14px;border-radius:12px;background:var(--paper);border:1px solid var(--line);font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:6px}
+.btn.pri{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.acc{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.teal{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.rec{background:var(--bad);border-color:var(--bad);color:#fff;animation:pulse 1.2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 7px #c94a4a33}}
+.seg{display:inline-flex;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:3px}
+.seg button{padding:6px 11px;border-radius:9px;font-size:13px;font-weight:600;color:var(--mute)}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px #0001}
+.ans{font-size:16px;line-height:1.8;margin-top:12px}
+.ans p{margin:0 0 10px}
+.s{cursor:pointer;border-radius:4px;transition:background .2s}
+.s.now{background:var(--teal2)}
+mark{background:var(--hl);color:inherit;border-radius:3px;padding:0 1px}
+.blank{display:inline-block;min-width:60px;border-bottom:2px solid var(--accent);color:transparent;cursor:pointer;user-select:none;border-radius:2px}
+.blank.open{color:var(--accent);font-weight:600}
+.hid .s{filter:blur(5px)}
+.hid .s.peek{filter:none}
+.hint .s .rest{color:transparent;background:repeating-linear-gradient(90deg,#e9e4d7 0 6px,transparent 6px 9px);border-radius:3px}
+.hint .s.peek .rest{color:inherit;background:none}
+.xp{display:grid;grid-template-columns:1fr;gap:6px;margin-top:8px}
+.xp div{display:flex;justify-content:space-between;gap:10px;padding:8px 10px;background:var(--paper);border-radius:10px;font-size:14px}
+.xp b{font-weight:600}
+.xp span{color:var(--ink2);text-align:right}
+.xp div.hit{background:var(--teal2)}
+.tip{background:var(--accent2);border-radius:12px;padding:12px 14px;font-size:14px;color:#7a3a17}
+textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit;font-size:15px;background:#fffefb;resize:vertical}
+.note{font-size:12.5px;color:var(--mute);margin-top:6px}
+.score{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.score div{flex:1;min-width:90px;background:var(--paper);border-radius:12px;padding:10px;text-align:center;font-size:12px;color:var(--mute)}
+.score b{display:block;font-size:20px;color:var(--ink)}
+.ai{white-space:pre-wrap;background:#f4f2ff;border-radius:12px;padding:12px 14px;font-size:14px;margin-top:10px}
+.hidden{display:none!important}
+/* mock */
+.exam{background:#1b2540;color:#fff;border-radius:22px;padding:18px;min-height:60vh;display:flex;flex-direction:column}
+.exam .top{display:flex;justify-content:space-between;font-size:13px;color:#a9b3cc}
+.exam .clock{font-variant-numeric:tabular-nums;font-weight:700;color:#fff}
+.ava{width:120px;height:120px;border-radius:50%;margin:26px auto 12px;background:radial-gradient(circle at 50% 38%,#f3c9a9 0 24%,transparent 25%),radial-gradient(circle at 50% 100%,var(--accent) 0 46%,transparent 47%),#2a3658;position:relative;transition:box-shadow .2s}
+.ava.talk{box-shadow:0 0 0 8px #e8743b44,0 0 0 18px #e8743b1a}
+.ava:after{content:"";position:absolute;left:28%;top:12%;width:44%;height:22%;border-radius:50% 50% 30% 30%;background:#3a2a22}
+.qno{text-align:center;font-family:Fraunces,serif;font-size:30px;font-weight:800}
+.qno small{display:block;font-family:"IBM Plex Sans KR";font-size:12px;font-weight:500;color:#a9b3cc}
+.exam .btn{background:#ffffff14;border-color:#ffffff22;color:#fff}
+.exam .btn.acc{background:var(--accent);border-color:var(--accent)}
+.exam .btn.rec{background:var(--bad);border-color:var(--bad)}
+.exam textarea{background:#ffffff0d;border-color:#ffffff22;color:#fff}
+.exam .note{color:#a9b3cc}
+.prog{display:flex;gap:3px;margin:12px 0}
+.prog i{flex:1;height:4px;border-radius:3px;background:#ffffff22}
+.prog i.d{background:var(--teal)}.prog i.c{background:var(--accent)}
+.opt{display:flex;flex-direction:column;gap:8px}
+.opt label{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:14px;cursor:pointer}
+.opt label.on{border-color:var(--ink);background:#f3f1ea}
+.opt input{margin-top:4px;accent-color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:8px 13px;border-radius:20px;border:1px solid var(--line);background:#fff;font-size:14px;font-weight:600}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.grade{font-family:Fraunces,serif;font-size:76px;font-weight:800;line-height:1;color:var(--accent);text-align:center;margin:10px 0 4px}
+.ladder{display:flex;gap:3px;margin:14px 0}
+.ladder span{flex:1;text-align:center;font-size:11px;padding:6px 0;border-radius:6px;background:#eee8dc;color:var(--mute);font-weight:600}
+.ladder span.on{background:var(--accent);color:#fff}
+.rq{border-top:1px solid var(--line);padding:12px 0}
+.rq .h{display:flex;justify-content:space-between;gap:8px;font-weight:600;font-size:14px}
+.rq .t{font-size:13.5px;color:var(--ink2);margin-top:4px}
+.pill{font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--teal2);color:var(--teal);flex:none}
+.modal{position:fixed;inset:0;background:#14213d88;display:grid;place-items:center;z-index:50;padding:20px}
+.modal .card{max-width:440px;width:100%}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<nav class="tabs">
+ <button data-tab="home" class="on">홈</button>
+ <button data-tab="practice">연습</button>
+ <button data-tab="mock">실전 모의고사</button>
+</nav>
+<script>
+const DB=[];let _id=0;function A(o){o.id="q"+(++_id);DB.push(o)}
+// Housing
+A({t:"housing",n:"집",q:"I would like to know where you live. Describe your house in detail. What does it look like? How many rooms do you have? Which is your favorite room at home?",k:"나의 집 묘사 (가장 좋아하는 방)",lv:"Int",
+a:`Well, let me tell you about the apartment I live in with my family. I have been living here for about, um, 5 years now. It's a cozy place with three bedrooms, two bathrooms and two balconies. There is also a living room, a kitchen, and a storage room.
+In the living room, we have various types of furniture like a sofa and a tea table. And there are various types of home appliances in the kitchen like a fridge, a microwave, and a stove.
+My favorite room at home is my bedroom. It's definitely the best place to get some rest. You know, I can kick back and relax there. In my room, I have a desk, a chair, a bed and some closets and dressers. I can do almost everything in my room. I can get some sleep, study, listen to music, surf the internet, or watch TV.
+So yeah! That's the apartment I call home!`,
+x:[["let me tell you about ~","~에 대해 말해줄게 (도입 필러)"],["I have been living here for ~","현재완료진행: ~동안 살아오고 있다"],["get some rest","쉬다"],["kick back and relax","편히 쉬다"],["That's the apartment I call home","마무리 문장"]]});
+A({t:"housing",n:"집",q:"Now, tell me about the things that you do at home. What are some daily routines you engage in? What is special about each activity? Give me all the details.",k:"집에서 하는 일과",lv:"Int",
+a:`On weekdays, I usually wake up at 6 in the morning. Then, I take a shower and have breakfast. Around 7 a.m., I leave for school. When I come back home, I like to get some rest in my room. I watch TV or read books.
+On weekends, I like to clean my apartment. First, I open all the windows to air out the apartment. Then, I vacuum and mop the floors.
+After that, I clean the bathroom and do the dishes. I also do the laundry almost every week.
+Last but not least, I take out the garbage every other day. I also take out the food waste separately.
+So yeah, these are the things I usually do at home.`,
+x:[["air out the apartment","환기시키다"],["vacuum and mop the floors","청소기 돌리고 바닥을 닦다"],["do the dishes / do the laundry","설거지하다 / 빨래하다"],["every other day","격일로"],["separately","따로"],["Last but not least","마지막으로 (중요한 것)"]]});
+A({t:"housing",n:"집",q:"Tell me about the house or apartment you lived in when you were a child. How was it different from the one you live in now? What are the differences and the similarities?",k:"어렸을 때 집과 지금 집 비교",lv:"Adv",
+a:`I lived in a small house with my family when I was a kid. There was a playground near my house. I used to play there with my friends. We would play in the sand or games like hide-and-seek. And I also used to ride my bike there. Man, I have tons of good memories of that house.
+But now, I live in a more spacious apartment. We have four bedrooms now. There is a big park nearby where I can take walks or ride my bike. I can get some exercise or get some fresh air there. Also, there are various types of stores and facilities near my home. There is a bank, a bus stop and a subway station. And there are some convenience stores, some bakeries and a drug store. There are also some restaurants, coffee shops, fast food places and bars.
+But you know, every now and then, I really miss my old house.`,
+x:[["used to / would + 동사","~하곤 했다 (과거 습관)"],["tons of","수없이 많은"],["more spacious","더 넓은 (비교급)"],["get some fresh air","바람 쐬다"],["every now and then","가끔"]]});
+A({t:"housing",n:"집",q:"Tell me about a change you made to your home. What was the change and why did you make that change? How did your home look like afterwards? Give me all the details.",k:"집에 준 변화",lv:"Adv",
+a:`I recently made a few changes to make my place nicer. I actually got some new furniture for the apartment a few weeks ago. I bought a new sofa, a new tea table, and umm.. let me think.. oh! some new dressers. After that, we rearranged the furniture in the apartment.
+I also bought a new computer and set it up in my room. On top of that, I got a few plants and placed them in the living room.
+Once all the changes were done, the apartment looked amazing! I was so happy with the new look. Sure, it was a bit expensive, but it was worth the money I spent.
+So yeah, these are the changes I remember making to my apartment.`,
+x:[["made a few changes","몇 가지 변화를 주었다"],["rearrange the furniture","가구를 재배치하다"],["On top of that","게다가"],["it was worth the money I spent","쓴 돈이 아깝지 않았다"],["Let me think.. Oh!","생각하는 척 필러 (자연스러움)"]]});
+A({t:"housing",n:"집",q:"Now, tell me about the problems you have experienced at home. What were those problems? How did they occur? How did you deal with those problems?",k:"본인 집에 생겼던 여러 문제점들 묘사",lv:"Adv",
+a:`I remember a few times when things at home broke down. For example, there was a time when my TV stopped working. It was really frustrating because I couldn't watch anything. Anyway, I couldn't fix it myself, so I called someone to repair it.
+I also remember when my computer broke down. I tried to fix it myself but it didn't work, so I took it to the service center to get it fixed.
+Oh, and once, I accidentally broke a cup. Of course, I had to clean up the broken glass right away. My mom was pretty upset about that.
+Hmm.. what else? Oh! I had some problems with my furniture once, too. So yeah, these are the issues I remember having at home. Hopefully, there won't be any more problems anytime soon!`,
+x:[["break down / stop working","고장 나다"],["really frustrating","정말 답답한"],["get it fixed","수리 받다"],["accidentally","실수로"],["clean up the broken glass","깨진 유리를 치우다"]]});
+A({t:"housing",n:"집",q:"Pick one of the problems you've mentioned above and tell me in detail about what happened. Tell me how the problem started and how it ended. Tell me how the problem was resolved.",k:"집에 생겼던 한 사건 자세히 묘사 (가구 파손)",lv:"Adv",
+a:`As I mentioned, I've had a few problems with my furniture at home.
+For example, I remember when my chair got damaged. One of the legs broke and completely fell off. It was impossible to fix it, so I had to throw it away. I eventually got a new chair.
+Another time, I remember when my desk got scratched. There were some marks and the paint peeled off. It didn't look good, so I covered it up.
+Oh, and there was also the time my bed got a stain. I spilled something on it by mistake. I wiped it off as quickly as I could, but unfortunately the stain didn't come out completely. I had to wash the blanket.
+So, those are some of the issues I've had with my furniture.`,
+x:[["As I mentioned","앞서 말했듯이 (콤보 연결)"],["got damaged / got scratched","손상됐다 / 긁혔다"],["the paint peeled off","페인트가 벗겨졌다"],["got a stain","얼룩이 졌다"],["by mistake","실수로"],["wipe it off","닦아내다"]]});
+A({t:"housing",n:"집",q:"How do you solve problems at home? How is it different from how you or your parents solve problems at home?",k:"14번 집에 생기는 문제 해결 방법 차이 (부모님 vs 나)",lv:"Adv",
+a:`To be honest, my parents and I do NOT solve problems at home differently.
+For smaller issues, we usually handle them ourselves. For example, there was a time when I accidentally broke a cup. Of course, I cleaned up the broken glass right away. My mom was pretty upset about that.
+But when it comes to bigger problems, we definitely get help. For instance, there was a time when my TV stopped working. It was really frustrating because I couldn't watch anything. I couldn't fix it myself, so I called someone to repair it.
+So yeah, we don't solve problems at home that differently.`,
+x:[["To be honest","솔직히"],["handle them ourselves","직접 처리하다"],["when it comes to ~","~에 관해서는"],["get help","도움을 받다"],["재활용","5번 답변 문장을 그대로 재활용 → 암기량 절약"]]});
+A({t:"housing",n:"집",q:"People go through various problems when they rent a house. What is a major problem they experience in your country, and how do people deal with that problem?",k:"15번 집을 구할 때 사람들이 겪는 대표적인 문제, 대처 방법",lv:"Adv",
+a:`One of the biggest problems when renting a house is the rent. In South Korea, rent prices are extremely high these days, and it's causing a lot of stress for many people.
+People deal with the problem in many ways. Some take out loans to cover the costs, while others move to smaller houses or even to the suburbs.
+Honestly, finding a good house with a reasonable rent in Korea feels almost impossible. It's so frustrating. You have to do your homework and put in a lot of effort to find the right place.`,
+x:[["One of the biggest problems","가장 큰 문제 중 하나"],["extremely(incredibly) high","엄청나게 높은"],["take out loans","대출을 받다"],["the suburbs","교외"],["reasonable rent","적당한 월세"],["do your homework","사전 조사를 하다"]]});
+// Music
+A({t:"music",n:"음악 감상",q:"You indicated that you like to listen to music. What type of music do you like listening to? Plus, who is your favorite singer?",k:"좋아하는 음악 장르, 좋아하는 가수",lv:"Int",
+a:`When it comes to music, I think I listen to everything. I enjoy a lot of pop, and I'm really into dance music too. But if I had to pick, I'd say rock is my favorite.
+One of my favorite singers is a British singer called Anne Marie. She is one of the most well-known musicians in the world. She does a lot of R&B and pop. She also won many music awards.
+She has tons of hit songs and among them, 2002 is my favorite. I really like the melody and the lyrics of that song. In fact, most of her songs are very catchy and trendy. I think her music is fast and upbeat. I think she is an incredible singer and amazing dancer. She also has a very nice and unique voice.
+And um.. I also like a Korean boy band called BTS. They are one of the biggest groups in Korea. They have a lot of fans overseas because K-POP is really big in the world. There are seven members in the group and they are all very good-looking. My favorite member is RM. He's really cool.
+Anyway, I really like their songs.`,
+x:[["When it comes to ~","~에 관해서는"],["I'm really into ~","~에 푹 빠져 있다"],["If I had to pick, I'd say ~","굳이 고르자면 ~"],["catchy and trendy","귀에 잘 감기고 트렌디한"],["fast and upbeat / soft and quiet","신나는 / 잔잔한"]]});
+A({t:"music",n:"음악 감상",q:"How did you first get interested in music? What kind of music did you listen to when you were young? How was that music different from the music you listen to today? How has your interest in music changed over the years?",k:"음악을 처음 좋아하게 된 계기, 취향 변화",lv:"Adv",
+a:`In my teenage years, I used to listen to a Korean group called GOD a lot. They were very big and everyone listened to their songs. They were sensational at that time. They sang and danced very well. They were also very good-looking and very talented. Among their songs, "Lies" was my favorite. I used to listen to it over and over again.
+But as I get older, I like to listen to various types of music. I sometimes listen to soft and quiet music. I listen to these songs when I'm studying. And I sometimes listen to upbeat music. I like to listen to these songs when I'm working out.
+Once again, I like to listen to various types of music as I get older.`,
+x:[["In my teenage years","10대 시절에"],["sensational","선풍적인"],["over and over again","반복해서"],["as I get older","나이가 들면서"],["Once again, ~","마무리: 핵심 반복"]]});
+A({t:"music",n:"음악 감상",q:"Tell me about a time when you went to listen to some live music. Perhaps it was at a concert or a live cafe. What was the mood like and how did you like the music you listened to there?",k:"라이브 음악 들었던 경험 (콘서트)",lv:"Adv",
+a:`I remember going to a concert with my friends a few years ago. It was a concert by a Korean singer called Lee Seung-chul. He is one of the most well-known musicians in Korea. The concert was held at a large concert hall. The mood of the concert was very lively. The fans were screaming, jumping up and down and singing all together. It was overwhelming. The singer sang all of his hit songs. There were many special effects that made the concert spectacular.
+The concert venue was full of people. In fact, the concert was completely sold-out. Looking back, it was one of the best concerts I have been to. It was worth the money I spent. I hope to go again if there is a chance.`,
+x:[["was held at ~","~에서 열렸다"],["The mood was very lively","분위기가 아주 활기찼다"],["overwhelming","압도적인"],["completely sold-out","완전 매진"],["Looking back, ~","돌이켜보면"],["one of the best ~ I have been to","가본 것 중 최고"]]});
+A({t:"music",n:"음악 감상",q:"When and where do you like to listen to music? Why do you listen to music?",k:"음악을 언제 어디서 듣는지, 왜 듣는지",lv:"Int",
+a:`Okay, I really like to listen to music. I especially like to listen to music when I'm on the move. I always listen to music on my cell phone. You know, I sometimes listen to music on the subway or on the bus. And I have some music on in the car when I'm driving. It's really nice.
+And then... oh! I also like to listen to music when I'm working out. And then, I like to have some music on when I'm cleaning the house or when I go to sleep.
+Anyway, I think I listen to music all the time! I love music. Music is my life!`,
+x:[["when I'm on the move","이동 중에"],["on my cell phone","휴대폰으로"],["have some music on","음악을 틀어 놓다"],["all the time","항상"]]});
+A({t:"music",n:"음악 감상",q:"Pick two different types of music or composers you like. What is special about each type of music? What are some similarities and differences between the two?",k:"14번 좋아하는 음악/작곡가 2명 비교 (1번 답변 활용)",lv:"Adv",
+a:`I'd like to compare two singers I really like: Anne Marie and BTS.
+Anne Marie is a British singer. She is one of the most well-known musicians in the world. She does a lot of R&B and pop, and her songs are very catchy and trendy. She has a very nice and unique voice.
+BTS is a Korean boy band. They are one of the biggest groups in Korea, and they have a lot of fans overseas because K-POP is really big in the world.
+Both Anne Marie and BTS are very popular, but their music is very different. Anne Marie does a lot of soft music, but BTS does a lot of dance music. Still, they both do a lot of modern rock.
+Anyway, I really like both of their songs.`,
+x:[["Both A and B are ~, but ~","둘 다 ~지만 (비교 공식)"],["their music is very different","음악 스타일이 매우 다르다"],["They both ~","공통점 말하기"],["1번 답변 활용","14번 비교는 1번 문장 재조합"]]});
+A({t:"music",n:"음악 감상",q:"Talk about some music gadgets or equipment that people are currently interested in. How are they useful and what do people like about them?",k:"15번 요즘 화제가 되는 음악 관련 기기/설비",lv:"Adv",
+a:`People listen to music on their cell phones. Because you can stream music on your cell phone. And the sound quality is pretty good.
+You know, cell phones have Bluetooth functions. So, you can connect them to various types of devices. You can connect them to your car audios or your audios at home. You can connect them to your Bluetooth headsets or speakers. It's very convenient because you don't need any wires. I use Bluetooth myself to listen to music.
+People are currently interested in Bluetooth devices, when it comes to music.`,
+x:[["stream music","음악을 스트리밍하다"],["sound quality","음질"],["connect them to ~","~에 연결하다"],["convenient","편리한"],["you don't need any wires","선이 필요 없다"]]});
+// Domestic trips
+A({t:"dtrip",n:"국내여행",q:"You indicated that you like to travel within your own country. Where do you usually go? Tell me about the places you like to visit in your country.",k:"국내여행 주로 어디로 가는지 (좋아하는 해변)",lv:"Int",
+a:`Korea has tons of beautiful and exciting beaches because it is a peninsula. I am a huge beach-goer in the summer.
+One of my favorite beaches is Haeundae. It is located in a coastal city called Busan which is my hometown.
+The beach is actually one of the most well-known beaches in Korea. It gets crowded during the peak season, but I think it's worth it. You know, there is a lot of stuff to do near the beach. There are a lot of restaurants, bars and coffee shops. Yeah, it's really nice!
+So anyway, I really enjoy going to the beach for my trips.`,
+x:[["peninsula","반도"],["a huge beach-goer","해변 마니아"],["is located in ~","~에 위치해 있다"],["coastal city","해안 도시"],["during the peak season","성수기에"],["it's worth it","그럴 가치가 있다"]]});
+A({t:"dtrip",n:"국내여행",q:"Tell me about a memorable trip you took when you were a child. Where did you go and who did you go with? What did you do there?",k:"어렸을 때 갔었던 여행 관련 추억",lv:"Adv",
+a:`I remember going to the beach with my family when I was a kid. The name of the beach was Gyeongpodae. During the day, we swam in the ocean and also played with the sand on the beach. And we took a lot of pictures. And we also did a lot of water sports. Yeah, it was really fun!
+In the evening, we had some seafood. The food was really good. I mean it was so delicious.
+At night, we took a walk along the beach. And we got some fresh air.
+Looking back, it was one of the best trips in my childhood.`,
+x:[["I remember going to ~","~에 갔던 기억이 난다"],["During the day / In the evening / At night","시간 순서 구조"],["took a walk along the beach","해변을 따라 산책했다"],["Looking back, ~","돌이켜보면"]]});
+A({t:"dtrip",n:"국내여행",q:"Tell me about a memorable episode from one of your domestic trips. What happened? Tell me everything from beginning to end.",k:"국내여행 중에 기억에 남는 에피소드 (만능 에피소드: 체한 경험)",lv:"Adv",
+a:`Well, okay. I think it was about 2 years ago? I went to Jeju with my family and had a great time. Well, mostly.
+But on the last day, I think I ate too much because the food was so delicious. You know what I mean?
+Anyway, I got indigestion and it was really bad. My stomach was upset and I also had a fever. Yeah, it was horrible! I tried to find some medicine but couldn't find any. So, I went to the drug store to get some medicine.
+I came back to the hotel and took some medicine. And I got lots of rest.
+Since then, I don't eat too much.`,
+x:[["(well, mostly)","반전 예고 필러"],["got indigestion","체했다"],["My stomach was upset","속이 안 좋았다"],["had a fever","열이 났다"],["Since then, ~","그 이후로 (교훈 마무리)"],["만능 에피소드","여행·음식점·해외여행 등에 재활용 가능"]]});
+A({t:"dtrip",n:"국내여행",q:"What do you do to prepare before you go on a trip? What do you usually pack?",k:"여행 가기 전에 하는 준비 (pack)",lv:"Int",
+a:`I pack tons of things when I go on trips. I am a heavy packer.
+First, I pack a lot of clothes. And I also pack my swimsuit and some underwear and socks.
+And then, I pack my toiletries and lotions. I pack my own towel and some sunblock.
+And what else? I make sure to pack my first-aid kit. There is some emergency medicine, such as bandaids, in the kit.
+Anyway, these are the things I pack before I go on trips.`,
+x:[["a heavy packer / a light packer","짐을 많이 / 적게 싸는 사람"],["toiletries","세면도구"],["first-aid kit","구급상자"],["make sure to ~","꼭 ~하다"]]});
+// Movies
+A({t:"movies",n:"영화",q:"You indicated that you like to go to the movies. What is your favorite genre of movies?",k:"좋아하는 영화 장르",lv:"Int",
+a:`When it comes to movies, I just watch everything from actions to animations. For instance, I recently went to watch the Zootopia sequel with my family. You know, the movie did well at the box office. I mean, it was a box-office hit.
+And I also like Korean movies. You know, they have become much better than in the past. They are a lot better in quality these days. I mean Korean movies are hitting the all-time record at the box office. And they are being released overseas. They're also winning awards at big film festivals.
+So, anyway, I just watch everything when it comes to movies.`,
+x:[["from A to B","A부터 B까지"],["did well at the box office","흥행했다"],["a box-office hit","흥행작"],["in quality","작품성 면에서"],["hitting the all-time record","역대 기록을 세우다"]]});
+A({t:"movies",n:"영화",q:"Tell me about the movie theater you went to recently. What did you do before and after the movie?",k:"최근에 갔던 영화관 묘사, 영화 보기 전후에 한 일",lv:"Adv",
+a:`I went to a movie theater near my house last weekend. As I told you, I went to watch the Zootopia sequel there. I did some shopping before the movie and had dinner with my family after the movie.
+You know, there are three big chains in Korea: CGV, Mega Box, and Lotte Cinema. They are usually on busy streets with a lot of foot traffic. And they have 3D, 4D, and IMAX theaters. So we have a lot of options to choose from. You know, movie tickets are a bit pricey, but I think it's worth the money.
+And there are tons of restaurants and shopping malls near theaters. You can do other stuff before and after movies.
+Anyway, I like movie theaters in Korea.`,
+x:[["As I told you","앞서 말했듯 (콤보 연결)"],["on busy streets","번화가에"],["with a lot of foot traffic","유동인구가 많은"],["a lot of options to choose from","선택의 폭이 넓다"],["a bit pricey","좀 비싼"],["do other stuff","다른 것들을 하다"]]});
+A({t:"movies",n:"영화",q:"What was the most memorable movie you watched in the past? What was it about? What was so special about that movie?",k:"기억에 남는 영화, 줄거리, 특이사항",lv:"Adv",
+a:`I recently watched a Korean movie called "Parasite" at home. It was a movie dealing with issues of social class. The movie starred one of my favorite actors, Song Kang-ho. It was directed by one of the best directors in Korea, Bong Joon-ho.
+Anyway, the movie was packed with exciting scenes. I really liked the storyline. You know, it was really fun! There were some big twists at the end. And I also liked the acting, the message and the chemistry among the actors.
+I think it was a killer movie. You know, the movie did well at the box office. The movie won 4 Oscars including best picture a couple of years ago. Anyway, I think it is one of my favorite movies now. It was worth the time I spent.`,
+x:[["dealing with issues of ~","~문제를 다룬"],["starred ~","~가 주연을 맡았다"],["was packed with exciting scenes","흥미진진한 장면으로 가득했다"],["storyline","줄거리"],["big twists","대반전"],["a killer movie","대박 영화"]]});
+A({t:"movies",n:"영화",q:"Could you compare the movies made today to movies you saw while you were growing up? How have movies changed over the years? What are the differences and similarities?",k:"14번 과거-현재 영화 작품들의 변화",lv:"Adv",
+a:`When I was a kid, I used to watch Hollywood movies quite often. That's because Korean movies were NOT that fun. They were a bit old-fashioned and boring.
+But now, I also like Korean movies. You know, they have become much better than in the past. They are a lot better in quality these days. I mean Korean movies are hitting the all-time record at the box office. And they are being released overseas. They're also winning awards at big film festivals.
+Once again, Korean movies have become a lot better in quality than in the past.`,
+x:[["used to + 동사","~하곤 했다"],["old-fashioned","구식인"],["have become much better than in the past","과거보다 훨씬 나아졌다"],["are being released overseas","해외에서 개봉되고 있다"],["1번 답변 활용","장르 답변 2문단 재활용"]]});
+A({t:"movies",n:"영화",q:"When your friends or family talk about movies, what topics or issues regarding movies do you discuss? Why are these issues of interest or concern to your friends? What makes them so important?",k:"15번 친구들과 이야기하는 영화 관련 토픽 설명",lv:"Adv",
+a:`My friends and I sometimes talk about Korean movies. As I mentioned, I like to watch them a lot. In fact, I remember talking about the Korean movie, Parasite last year. It was a movie dealing with issues of social class.
+The movie starred one of my favorite actors, Song Kang-ho. It was directed by one of the best directors in Korea, Bong Joon-ho. Anyway, the movie was packed with exciting scenes. I really liked the storyline. You know, it was really fun! There were some big twists at the end. And I also liked the acting, the message and the chemistry among the actors. I think it was a killer movie. You know, the movie did well at the box office. The movie won 4 Oscars including best picture.
+Anyway, we talk about Korean movies a lot these days.`,
+x:[["I remember talking about ~","~에 대해 얘기했던 기억이 난다"],["3번 답변 활용","기억에 남는 영화 답변 재활용"],["we talk about ~ a lot these days","요즘 ~에 대해 많이 얘기한다 (마무리)"]]});
+// Coffee shops
+A({t:"coffee",n:"커피숍",q:"You've indicated that you go to coffee shops. Tell me about some cafes or coffee houses in your community.",k:"동네 커피숍 묘사",lv:"Int",
+a:`You know, in South Korea, there are tons of coffee shops. They are everywhere these days. Many coffee shops are on busy streets. And we have a lot of major chains such as Starbucks or Coffee Bean. These coffee shop chains are usually big in size.
+Among them, I like to go to Starbucks near my house. I go there because I like the mood and the workers are super kind. There are many tables and comfy chairs in the coffee shop as well.
+Some people have coffee on the spot and some people get coffee to go. Yeah, coffee shops are nice in Korea.`,
+x:[["They are everywhere these days","요즘 어디에나 있다"],["major chains such as ~","~같은 대형 체인"],["big in size","규모면에서 큰"],["comfy chairs","편안한 의자"],["have coffee on the spot / get coffee to go","매장에서 마시다 / 포장하다"]]});
+A({t:"coffee",n:"커피숍",q:"Tell me about a memorable incident that happened at a coffee shop. What happened? Who was involved? How did you deal with the situation? Tell me everything about what happened from beginning to end.",k:"커피숍에서 기억에 남는 에피소드 (만능 에피소드: 핸드폰 떨어뜨린 경험)",lv:"Adv",
+a:`Well, okay. A few weeks ago, I went to Starbucks near my house to meet some friends. I was doing something on my cell phone and I accidentally dropped it on the ground.
+And guess what happened? (sigh) The screen cracked! It was so frustrating because it was a brand-new phone and super expensive. Anyway, I went to the service center and it cost me 400 dollars to fix!
+Since then, I've been trying to be more careful. Man! I need to be more careful.`,
+x:[["accidentally dropped it","실수로 떨어뜨렸다"],["And guess what happened?","그런데 무슨 일이 생겼게? (긴장감)"],["The screen cracked","화면이 깨졌다"],["brand-new","새로 산"],["it cost me ~ to fix","고치는 데 ~가 들었다"],["만능 에피소드","핸드폰·노트북 고장 등 어디든 재활용"]]});
+A({t:"coffee",n:"커피숍",q:"Talk about the first coffee shop you went to. What was special about that place? What do you remember most? What did you drink there?",k:"처음으로 가본 커피숍 묘사",lv:"Adv",
+a:`The first coffee shop? Umm.. Honestly? I don't remember the first coffee shop I went to. It was a long time ago. You know? I think I went to coffee shops a lot in my teenage years.
+Anyway, I'm sorry but I don't remember much about it.`,
+x:[["Honestly? I don't remember ~","솔직히 기억 안 나요 (모르는 질문 대처)"],["It was a long time ago","오래 전 일이라"],["I'm sorry but ~","죄송하지만"],["전략","기억 안 나는 질문은 짧게 솔직히 → 다음 문제 체력 아끼기. 단, 너무 짧으면 감점이니 아는 내용을 1~2문장 덧붙이면 더 좋아요."]]});
+A({t:"coffee",n:"커피숍",q:"What do you normally do when you go to coffee shops? Do you have meetings or gatherings there? Tell me what you like to do.",k:"커피숍에서 본인이 주로 하는 일",lv:"Int",
+a:`I mostly go to coffee shops to hang out with friends or co-workers. I sometimes get coffee to go. I sometimes drink it on the spot. A lot of coffee shops sell food such as sandwiches or bagels these days. So I sometimes grab a bite when I'm hungry.
+And I sometimes go to coffee shops to use their free wi-fi. You know, I can get access to the internet. I sometimes listen to music or watch movies on my cell phone with some coffee. You know, it's really nice. And I sometimes go to coffee shops to kill time.
+So, yeah! These are the things I do at coffee shops.`,
+x:[["hang out with ~","~와 어울려 놀다"],["grab a bite","간단하게 요기하다"],["get access to the internet","인터넷에 접속하다"],["kill time","시간을 때우다"]]});
+A({t:"coffee",n:"커피숍",q:"People nowadays don't go to coffee shops just to drink coffee. How has the role of coffee shops changed over the years? What do people normally do at coffee shops other than drinking coffee?",k:"14번 커피숍의 과거-현재 역할 변화",lv:"Adv",
+a:`Back in the day, coffee shops were small local stores. People went to coffee shops to drink coffee. They went there to hang out with friends or co-workers.
+But these days, a lot of coffee places sell food as well. People can grab a bite if they are hungry.
+And people sometimes go to coffee shops to use their free wi-fi. You know, you can get access to the internet. People sometimes listen to music or watch movies on their cell phones with some coffee. You know, it's really nice. And people sometimes go to coffee shops to kill time.
+So, overall, the role of coffee shops has changed quite a lot over the years.`,
+x:[["Back in the day","예전에는"],["small local stores","작은 동네 가게"],["But these days, ~","하지만 요즘은 (비교 전환)"],["has changed quite a lot over the years","수년간 꽤 많이 변했다"],["4번 답변 활용","주어만 I → People로 바꿔 재활용"]]});
+A({t:"coffee",n:"커피숍",q:"Coffee shops are one of the hottest places all over the world. What are some special events that take place at coffee shops? Tell me everything about coffee shops in your country.",k:"15번 우리나라 커피숍 특별한 점",lv:"Adv",
+a:`You know, in South Korea, there are tons of coffee shops. They are everywhere these days. Many coffee shops are on busy streets. And we have a lot of major chains such as Starbucks or Coffee Bean. These coffee shop chains are usually big in size.
+Among them, I like to go to Starbucks near my house. I go there because I like the mood and the workers are super kind. There are many tables and comfy chairs in the coffee shop as well.
+Some people have coffee on the spot and some people get coffee to go. Yeah, coffee shops are nice in Korea.`,
+x:[["1번 답변 활용","동네 커피숍 묘사를 그대로 재활용"],["tons of","엄청 많은"],["on busy streets","번화가에"]]});
+// Bars
+A({t:"bars",n:"술집/바",q:"You indicated that you go to bars. Tell me about the bars or pubs you like to go to. What do they look like? Why do you like going there?",k:"본인이 즐겨 가는 술집/바 묘사",lv:"Int",
+a:`You know, in South Korea, there are tons of bars. They are everywhere these days. Koreans love drinking, you know. Many bars are on busy streets. We have a lot of major chains and these bar chains are usually big in size.
+Among them, I like to go to a pub near my house. I go there because I like the mood and the workers are super kind. There are many tables and comfy chairs in the bar as well. And they serve various types of beer. I'm a regular there. I think I go there almost every week with my friends.
+Yeah, bars are nice in Korea.`,
+x:[["a regular","단골"],["serve various types of ~","다양한 ~을 판매하다"],["almost every week","거의 매주"],["커피숍 1번 틀 재활용","coffee shops → bars로 바꾸기만"]]});
+A({t:"bars",n:"술집/바",q:"When do you usually go to bars? What do you normally do there? Who do you go with?",k:"술집/바에 주로 언제 가는지, 어떤 일 하는지",lv:"Int",
+a:`I usually go to bars for social gatherings. We normally grab some drinks with some good food. Drinks help to break the ice or spice up the mood.
+And I sometimes have staff-dinners or after-parties at bars. It's a great chance to bond with friends or co-workers.
+I also go to bars for special events such as birthday parties, welcome parties, year-end parties and New Year parties.
+I am not a good drinker, but I like to hang out with my friends. Anyway, I usually go to bars to hang out with friends or co-workers.`,
+x:[["for social gatherings","모임을 위해"],["break the ice / spice up the mood","어색함을 깨다 / 분위기를 띄우다"],["after-parties","뒷풀이"],["bond with ~","~와 친해지다"],["I'm not a good drinker / a pretty good drinker","술이 약하다 / 술이 세다"]]});
+A({t:"bars",n:"술집/바",q:"Tell me about a memorable experience you had at a bar. What happened? Who were you with? Tell me everything from beginning to end.",k:"술집/바에 있었던 에피소드 (만능 에피소드: 핸드폰)",lv:"Adv",
+a:`Well, okay. This is really frustrating. A few weeks ago, I went to a pub near my house to hang out with my best friend. You know, we talked and drank a lot that day.
+Anyway, I think I got drunk and I dropped my phone on the ground. And guess what? The screen cracked! It was so frustrating because it was a brand-new phone and super expensive. Anyway, I went to the service center and it cost me 400 dollars to fix!
+Since then, I don't drink too much.`,
+x:[["got drunk","취했다"],["dropped my phone on the ground","핸드폰을 바닥에 떨어뜨렸다"],["Since then, I don't ~ too much","그 이후로 ~ 많이 안 한다"],["만능 에피소드","커피숍 에피소드 재활용 (모임/휴일/자유시간에도 OK)"]]});
+// Restaurant
+A({t:"restaurant",n:"음식점",q:"Tell me about the restaurants in your country. What kinds of restaurants are popular? Describe a typical restaurant in your country.",k:"우리나라 보편적인 음식점 묘사 (치킨집)",lv:"Int",
+a:`You know, in South Korea, there are tons of chicken restaurants. They are everywhere these days. Koreans love fried-chicken, you know? It's amazing. Anyway, many chicken restaurants are on busy streets. We have a lot of major chains and these restaurant chains are usually big in size.
+Among them, I like to go to a chicken place near my house. I go there because I like the mood and the workers are super kind. There are many tables and comfy chairs in the restaurant as well. And they serve various types of chicken dishes. I'm a regular there. I think I go there almost every week with my family.
+Yeah, chicken restaurants are nice in Korea.`,
+x:[["Koreans love ~, you know?","한국인은 ~를 정말 좋아해요"],["serve various types of ~ dishes","다양한 ~요리를 판매하다"],["커피숍·술집과 같은 틀","장소 묘사 공식 하나로 3주제 커버"]]});
+A({t:"restaurant",n:"음식점",q:"Tell me about the last time you went to a restaurant. Where did you go and who did you go with? What did you eat? Tell me everything you did there.",k:"최근에 간 음식점에서 한 일 (치킨집)",lv:"Int",
+a:`I had a gathering with my family last weekend. We went to a chicken restaurant near my house. The place was well-known for fried-chicken. Actually they had the best chicken in town. You know, it was so crispy and crunchy. We had chicken with some draft beer. It was so good. It was really delicious.
+Anyway, we had a good time.`,
+x:[["had a gathering with ~","~와 모임을 가졌다"],["was well-known for ~","~로 유명했다"],["the best ~ in town","동네 최고의 ~"],["crispy and crunchy","바삭바삭한"],["draft beer","생맥주"]]});
+A({t:"restaurant",n:"음식점",q:"Tell me about a restaurant you used to go to when you were young. What was it like? What did you eat there? Why do you remember it?",k:"어렸을 때 갔던 음식점 (분식점)",lv:"Adv",
+a:`When I was a kid, I used to go to a Korean fast food place near my house. I remember eating various types of street food.
+I also knew the owner really well, because I was a regular there. So, she used to give us more food than other people. You know, the food was amazing. I mean it was so delicious. And it was really cheap too.
+Looking back, I think it was one of my favorite restaurants in my childhood.`,
+x:[["a Korean fast food place","분식점"],["street food","길거리 음식"],["knew the owner really well","사장님과 잘 알았다"],["Looking back, ~ one of my favorite ~","돌이켜보면 최애 ~ 중 하나"]]});
+// Gatherings
+A({t:"gather",n:"모임/기념일",q:"Tell me about the gatherings or celebrations you usually go to. Where do you go and what do you do there?",k:"본인이 가는 모임/기념일 묘사 (술집에서 하는 일)",lv:"Int",
+a:`I have social gatherings on and off. I usually go to bars for social gatherings. We normally grab some drinks with some good food. Drinks help to break the ice or spice up the mood.
+And I sometimes have staff-dinners or after-parties at bars. It's a great chance to bond with friends or co-workers.
+I also go to bars for special events such as birthday parties, welcome parties, year-end parties and New Year parties.
+So, these are the gatherings I have with my friends or co-workers.`,
+x:[["on and off","때때로"],["술집 2번 재활용","거의 같은 답변으로 커버"]]});
+A({t:"gather",n:"모임/기념일",q:"Tell me about the last gathering or celebration you went to. What did you do there? Who was there?",k:"지난번 모임/기념일에 한 일 묘사 (치킨집)",lv:"Int",
+a:`I had a gathering with my family last weekend. We went to a chicken restaurant near my house. The place was well-known for fried-chicken. Actually they had the best chicken in town. You know, it was so crispy and crunchy. We had chicken with some draft beer. It was so good. It was really delicious.
+Anyway, we had a good time.`,
+x:[["음식점 2번 재활용","최근 음식점 경험 그대로"]]});
+A({t:"gather",n:"모임/기념일",q:"Tell me about a memorable incident that happened at a gathering or celebration. What happened? Tell me everything from beginning to end.",k:"모임/기념일 기억에 나는 사건 (만능 에피소드)",lv:"Adv",
+a:`Well, okay. This is really frustrating. A few weeks ago, I went to a pub near my house to hang out with my best friend, James. It was his birthday. You know, we talked and drank a lot that day.
+Anyway, I think I was drunk and I dropped my phone on the ground. And guess what? The screen cracked! I mean, it was so frustrating because it was a brand-new phone. It was very expensive, you know? Anyway, I went to the service center and it cost 400 dollars!
+Since then, I don't drink too much.`,
+x:[["It was his birthday","모임 주제에 맞게 한 줄 추가"],["만능 에피소드","술집 3번 재활용"]]});
+A({t:"gather",n:"모임/기념일",q:"How have gatherings or celebrations changed over the years? How are gatherings in the past different from gatherings today?",k:"14번 과거 모임과 현재 모임의 차이",lv:"Adv",
+a:`To be honest, gatherings have not changed that much over the years. People commonly have social gatherings. They grab some drinks with their friends at bars. Drinks help to break the ice or spice up the mood.
+Plus, people also have staff-dinners or after-parties. It's a great chance to bond with colleagues.
+People also have gatherings for special occasions such as birthday parties, farewell parties, year-end parties and New Year parties.
+These are the get-togethers people typically have. So, once again, gatherings have not changed that much over the years.`,
+x:[["have not changed that much","그렇게 많이 변하지 않았다 (비교 질문 꿀팁)"],["colleagues","동료"],["farewell parties","송별회"],["get-togethers","모임"]]});
+A({t:"dtrip",n:"국내여행",q:"How has traveling in your country changed over the years? What has become easier or more difficult compared to the past?",k:"14번 국내여행 과거-현재 비교, 어려워진 점",lv:"Adv",
+a:`To be honest, I think travelling has become much easier than in the past.
+First of all, transportation has become a lot faster and better over the years. For instance, Korea now has a bullet train called the KTX. It's much faster than ordinary trains.
+Plus, plane tickets have become much cheaper because of low-cost carriers. Also, driving has become much easier because we now have GPS.
+Plus, we can now get plane tickets or train tickets on our cell phones. I mean, I can buy tickets when I'm on the move. It's super convenient. You know what I mean?
+Once again, I think travelling has become a lot easier than in the past.`,
+x:[["has become much easier than in the past","과거보다 훨씬 쉬워졌다"],["transportation","교통"],["a bullet train","고속열차"],["low-cost carriers","저가 항공사"],["when I'm on the move","이동 중에"]]});
+A({t:"dtrip",n:"국내여행",q:"What are some concerns or worries people have when it comes to traveling? Why do people have those concerns?",k:"15번 여행 관련해서 사람이 갖고 있는 우려/걱정",lv:"Adv",
+a:`When it comes to travelling, one of the biggest concerns is safety. People could get hurt or get sick while they are on the move. So, they have to take precautions to be safe.
+For instance, people have to warm up before they go into water. If not, they could get cramps or get heart attacks.
+You know, another concern is food safety. People must make sure to eat safe food. If not, they could get food poisoning.
+Once again, I think safety is one of the major concerns when it comes to travelling.`,
+x:[["one of the biggest concerns","가장 큰 걱정 중 하나"],["take precautions","사전 예방 조치를 취하다"],["warm up","준비운동 하다"],["get cramps","쥐가 나다"],["get food poisoning","식중독에 걸리다"]]});
+A({t:"otrip",n:"해외여행",q:"Which countries do people in your country like to visit? Why do they like to go there?",k:"우리나라 사람들이 해외여행을 어느 나라로 가는지",lv:"Int",
+a:`Koreans go on trips to Japan a lot. Some people go there on vacation, some people go there on business.
+Japan is one of our closest neighboring countries. It's similar to Korea when it comes to geography. There are many mountains and rivers in Japan. Half of Japan is mountainous.
+Also, because Japan is an island nation, there are tons of beaches. Some beaches are popular vacation spots and the coastline is beautiful. Because of this geography, people often go on vacations to beaches.
+Anyway, Koreans like to go to Japan.`,
+x:[["on vacation / on business","휴가로 / 출장으로"],["one of our closest neighboring countries","가장 가까운 이웃나라 중 하나"],["similar to ~ when it comes to geography","지형 면에서 ~와 비슷"],["mountainous","산이 많은"],["an island nation","섬나라"]]});
+A({t:"otrip",n:"해외여행",q:"Tell me about a foreign country you visited when you were young. What was it like? What do you remember about it?",k:"본인이 어렸을 때 가보았던 외국 국가 묘사 (안 가본 경우)",lv:"Int",
+a:`Well, I never went on a trip overseas when I was a kid. Back then, traveling overseas was not that common. So, I don't have much to say about this. Sorry!
+But you know, I went to Japan with my friends a few years ago. It was one of the best trips I have been to. So, if I had to talk about a foreign country, I'd say Japan.`,
+x:[["Back then","그 당시에"],["was not that common","그렇게 흔하지 않았다"],["I don't have much to say about this","이건 할 말이 별로 없어요"],["팁","안 가봤다면 짧게 인정 + 아는 경험으로 살짝 연결"]]});
+A({t:"otrip",n:"해외여행",q:"Tell me about a memorable episode that happened to you or someone else while traveling overseas. What happened? Tell me everything from beginning to end.",k:"해외여행 중 겪은 에피소드 (만능: 체한 경험)",lv:"Adv",
+a:`Well, okay. I think it was about 2 years ago? I went to China with my family and had a great time. Well, mostly.
+But on the last day, we went to a great Chinese restaurant. And I think I ate too much because the food was so delicious. You know what I mean?
+Anyway, I got indigestion and it was really bad. My stomach was upset and I also had a fever. Yeah, it was horrible! I tried to find some medicine but couldn't find any. So, I went to the drug store to get some medicine.
+I came back to the hotel and took some medicine. And I got lots of rest.
+Since then, I don't eat too much.`,
+x:[["만능 에피소드","국내여행 3번 재활용 (제주 → China)"],["got indigestion","체했다"],["Since then","그 이후로"]]});
+A({t:"otrip",n:"해외여행",q:"What do tourists from your country usually do when they travel overseas?",k:"우리나라 관광객들이 해외여행지에서 주로 뭐하는지",lv:"Adv",
+a:`Koreans like to go to tourist attractions when they travel overseas. They visit historic sites or landmarks in the country. They take a lot of pictures and post them up on Instagram.
+Some people go on package tours, some people go on free trips. And they do a lot of shopping and buy a lot of souvenirs. They also visit duty free shops at airports to get gifts.
+Some people also go to local restaurants or local markets, and some go to beaches to relax and do water sports.
+So, overall, these are the things we do when we travel overseas.`,
+x:[["tourist attractions","관광 명소"],["historic sites or landmarks","유적지나 랜드마크"],["post them up on Instagram","인스타에 올리다"],["package tours / free trips","패키지 여행 / 자유여행"],["buy souvenirs","기념품을 사다"],["duty free shops","면세점"]]});
+A({t:"geo",n:"지형",q:"Tell me about one of the neighboring countries of your country. What is it like? What are the people like there?",k:"이웃국가 묘사, 그 나라 사람들 성향 묘사",lv:"Adv",
+a:`Japan is one of our closest neighboring countries. Japan is similar to Korea when it comes to geography. There are many mountains and rivers in Japan. Half of Japan is mountainous.
+Also, because Japan is an island nation, there are tons of beaches. Some beaches are popular vacation spots and the coastline is beautiful. Because of this geography, people often go on vacations to beaches.
+I think Japanese people are friendly and gentle in general. They are shy in front of people.
+Anyway, Japan is one of our closest neighboring countries.`,
+x:[["friendly and gentle in general","대체로 친절하고 온화한"],["shy in front of people","사람들 앞에서 수줍은"],["해외여행 7번 재활용","나라 묘사 + 사람 성향 2줄 추가"]]});
+A({t:"geo",n:"지형",q:"Describe the geography of your country. What do people in your country do in their free time because of the geography?",k:"우리나라 사람들이 시간이 날 때 주로 뭐하는지 (우리나라 지형 묘사)",lv:"Int",
+a:`There are many mountains and rivers in Korea. 70 percent of Korea is mountainous. So many people like to go hiking or camping to the mountains.
+There are also many rivers and we have a lot of riverside parks. So people go there to ride bikes or take walks.
+Also, Korea is a peninsula, so there are tons of beaches. Many beaches are popular vacation spots and the coastline is beautiful. People often go on vacations to beaches.
+Yeah! That's all I guess.`,
+x:[["70 percent of Korea is mountainous","국토의 70%가 산"],["go hiking or camping","등산이나 캠핑을 가다"],["riverside parks","한강공원 같은 강변 공원"],["a peninsula","반도"]]});
+A({t:"geo",n:"지형",q:"Tell me about a memorable place you visited last time. Where was it and what did you do there?",k:"마지막으로 갔었던 기억에 남는 장소 묘사",lv:"Adv",
+a:`I remember going to the beach with my family about 5 years ago. The name of the beach was Gyeongpodae. During the day, we swam in the ocean and also played with the sand on the beach. And we took a lot of pictures. And we also did a lot of water sports. Yeah, it was really fun!
+In the evening, we had some seafood. The food was really good. I mean it was so delicious.
+At night, we took a walk along the beach. And we got some fresh air.
+Looking back, I think it was one of the best trips.`,
+x:[["국내여행 2번 재활용","when I was a kid → about 5 years ago만 변경"]]});
+A({t:"geo",n:"지형",q:"Describe a neighboring country that has similar geography to your country. What changes or trends is that country going through these days?",k:"14번 지형적으로 유사한 이웃국가 묘사, 변화 추세",lv:"Adv",
+a:`Japan is one of our closest neighboring countries. Japan is similar to Korea when it comes to geography. There are many mountains and rivers in Japan. Half of Japan is mountainous.
+Also, because Japan is an island nation, there are tons of beaches. Some beaches are popular vacation spots and the coastline is beautiful. Because of this geography, people often go on vacations to beaches.
+I think Japanese people are friendly and gentle in general. They are shy in front of people.
+One of the changes Japan is going through is population aging. Its population is actually aging quite rapidly.`,
+x:[["One of the changes ~ is going through","~가 겪고 있는 변화 중 하나"],["population aging","인구 고령화"],["is aging quite rapidly","꽤 빠르게 고령화되고 있다"]]});
+A({t:"vacation",n:"집에서 보내는 휴가",q:"You indicated that you like to spend your vacation at home. What do you usually do when you spend your vacation at home? Who do you usually see?",k:"집에서 휴가 보낼 때 하는 일",lv:"Int",
+a:`I don't get to spend a lot of time with my family or friends. That's because we're all busy with our lives. You know what I mean?
+So when I get some time off, I normally spend some time with my family or friends.
+We sometimes go to bars together. We like to grab some drinks with some good food.
+We sometimes go to chicken restaurants. There are tons of chicken places in Korea and the chicken is amazing.
+And I sometimes watch movies at home. Korean movies and TV shows are really fun these days. They have become much better in quality than in the past.
+So I kind of miss my friends and want to see them soon.`,
+x:[["get to spend time with ~","~와 시간을 보낼 수 있다"],["busy with our lives","각자 사느라 바쁜"],["get some time off","휴가를 얻다"],["kind of","좀, 약간"],["영화/술집/음식점 답변 활용","여러 주제 문장 조합"]]});
+A({t:"vacation",n:"집에서 보내는 휴가",q:"Tell me about what you did during your last vacation at home. What did you do each day?",k:"지난 휴가 때 한 일",lv:"Int",
+a:`On my last vacation, I didn't go anywhere far and just stayed at home.
+On the first day, I went to a chicken restaurant with my family and had some chicken. The place was well-known for fried-chicken and it was really good.
+On the second day, I cleaned my house. I did the dishes and the laundry. I also cleaned the bathroom and took out the garbage.
+On the last day, I got some rest at home and saw a movie. It was a Korean movie called "Parasite" and it was really fun.
+Anyway, this is how I spent my last vacation at home.`,
+x:[["didn't go anywhere far","멀리 가지 않았다"],["On the first / second / last day","날짜별 구조 (말하기 쉬움)"],["집·음식점·영화 답변 활용","3주제 문장 재조합"]]});
+A({t:"vacation",n:"집에서 보내는 휴가",q:"Tell me about the most memorable vacation you spent at home. What happened? Why was it so memorable?",k:"집에서 보낸 휴가 중 가장 기억에 남는 경험 (음식 먹고 탈이 난 경험)",lv:"Adv",
+a:`Well, okay. I think it was about 2 years ago on my summer vacation. I didn't go anywhere special and I just did lots of things at home.
+On the last day, I cooked some home-made Korean dish. And I think I ate too much because it was so delicious. You know what I mean?
+Anyway, I got indigestion and it was really bad. My stomach was upset and I also had a fever. Yeah, it was horrible! I tried to find some medicine but couldn't find any. So, I went to the drug store to get some medicine.
+I came back home and took some medicine. And I got lots of rest.
+Since then, I don't eat too much.`,
+x:[["home-made Korean dish","집에서 만든 한식"],["만능 에피소드","체한 경험 재활용 (hotel → home)"]]});
+A({t:"vacation",n:"집에서 보내는 휴가",q:"How have the ways people spend their vacations changed over the years? Compare how people spent vacations in the past to how they do now.",k:"14번 휴가 보내는 방법의 과거-현재 비교",lv:"Adv",
+a:`To be honest, the way people spend vacations is not that different now. People don't get to spend a lot of time with friends or family. That's because we're all busy with our lives.
+So when we get some time off, we normally spend some time with family or friends.
+We sometimes go to bars together. We like to grab some drinks with some good food. We sometimes go to chicken restaurants. There are tons of chicken places in Korea and the chicken is amazing. And we sometimes watch movies. Korean movies and TV shows are really fun these days. They have become much better in quality than in the past.
+Anyway, the way people spend vacations is not that different now.`,
+x:[["is not that different now","지금도 크게 다르지 않다"],["1번 답변 활용","I → we/people로 바꾸기"]]});
+A({t:"vacation",n:"집에서 보내는 휴가",q:"Why do you think vacations are important? Why do people need vacations?",k:"15번 휴가의 중요성",lv:"Adv",
+a:`I think vacations are very important in many ways. People need to get some time off for their health, relationships and personal growth.
+You know, people need to get some rest. If they continue to work without vacations, they can get burned out.
+Next, vacations are important for relationships. People need to spend some quality time with their loved ones. Vacations are the best way to do that. People can do hobbies or go on trips together.
+Vacations are important for personal growth as well. People need some downtime to look back on their lives. They can think about their careers and make future plans. They can also learn something new or study a foreign language.
+Anyway, this is why I think vacations are important.`,
+x:[["in many ways","다양한 면에서"],["get burned out","번아웃되다"],["spend some quality time with ~","~와 의미 있는 시간을 보내다"],["downtime","쉬는 시간"],["look back on their lives","삶을 돌아보다"]]});
+A({t:"shopping",n:"쇼핑",q:"You indicated that you like to go shopping. Where do you like to shop? Tell me about your shopping habits.",k:"본인의 쇼핑 습관/장소 묘사",lv:"Int",
+a:`I shop at various locations such as department stores and shopping malls. But one of my favorite shopping places is online. Online shopping is very convenient in many ways. It is a lot easier to buy things. It takes much less effort and time.
+I can also do online shopping on my cell phone. I mean, I can do shopping when I'm on the move. It's super convenient, you know.
+I shop for things such as food, clothes or books on the internet. Also, they have a lot of promotions online, so you can get great deals.
+Once again, one of my favorite shopping places is online.`,
+x:[["at various locations such as ~","~같은 다양한 장소에서"],["It takes much less effort and time","노력과 시간이 훨씬 덜 든다"],["a lot of promotions","많은 할인 행사"],["get great deals","좋은 가격에 사다"]]});
+A({t:"shopping",n:"쇼핑",q:"Tell me about the last time you went shopping. Where did you go and what did you buy?",k:"최근 쇼핑한 경험",lv:"Int",
+a:`I went shopping to a discount store called E-mart near my house last weekend. I went grocery shopping with my family.
+First, we bought some rice, some meat, and some bread. Next, we bought some snacks and drinks. Plus, we bought some instant noodles, sausages, fruits and veggies.
+I was very happy with the products that I bought. E-mart has good prices and good-quality goods. So, you can get great deals there. Plus, there are many promotions such as "buy two get one free".
+So, this was the last time I went shopping.`,
+x:[["a discount store","대형마트"],["went grocery shopping","장을 봤다"],["First / Next / Plus","나열 연결어"],["good-quality goods","질 좋은 상품"],["buy two get one free","2+1"]]});
+A({t:"shopping",n:"쇼핑",q:"Tell me about a problem you had while shopping. What happened and how did you deal with it?",k:"본인이 쇼핑 중 겪었던 문제들",lv:"Adv",
+a:`Okay, I bought a sweater online about 2 years ago. I got it on eBay.
+Anyway, I got my sweater, but the store sent me the wrong size. I tried it on, but it didn't fit me.
+Even worse, the quality was much lower than I expected. Eventually, I sent it back and got a refund.
+Since then, I don't buy clothes online that often.`,
+x:[["sent me the wrong size","사이즈를 잘못 보냈다"],["it didn't fit me / look good on me","안 맞았다 / 안 어울렸다"],["Even worse","설상가상으로"],["much lower than I expected","기대보다 훨씬 낮은"],["got a refund / an exchange","환불 / 교환 받았다"]]});
+A({t:"shopping",n:"쇼핑",q:"Tell me about your shopping memories from childhood. Where did you go and who did you go with? Why did you like it?",k:"어렸을 때 쇼핑 기억, 왜 좋아하게 되었는지",lv:"Adv",
+a:`I used to go to a traditional market near my house when I was a kid.
+My parents used to go grocery shopping there. The market was very big in size. There were a lot of options to choose from.
+We used to buy some rice, some meat, and some bread. Plus, we used to buy some ice-cream, milk, and cheese. I was very excited whenever I went there. Because my mom used to buy me some candies.
+So yeah! That's all I guess.`,
+x:[["a traditional market","전통시장"],["used to ~","~하곤 했다"],["a lot of options to choose from","선택의 폭이 넓은"],["whenever I went there","갈 때마다"]]});
+A({t:"shopping",n:"쇼핑",q:"What is the biggest change in people's shopping habits? How have shopping habits changed over the years?",k:"14번 사람들의 쇼핑 습관 관련된 가장 큰 변화",lv:"Adv",
+a:`People shop at various locations such as department stores and shopping malls. However, people now shop online very often as well. Online shopping is very convenient in many ways. It is a lot easier to buy things. It takes much less effort and time.
+People can also do online shopping on their phones. They can buy things wherever they are, whenever they want to or on the move.
+People shop for things such as electronics, clothes or accessories on the internet. Also, they have a lot of promotions online, so you can get great deals there.
+Once again, one of the biggest changes is online shopping.`,
+x:[["However, people now ~","하지만 이제 사람들은 ~"],["wherever they are, whenever they want to","언제 어디서나"],["one of the biggest changes","가장 큰 변화 중 하나"]]});
+// Roleplay concert
+A({t:"rp_concert",n:"롤플레이: 콘서트",rp:1,q:"I'd like to give you a situation and ask you to act it out. You want to go to a concert with your friend. Call the ticket office and ask three or four questions to buy tickets for the concert.",k:"11번 공연장에 콘서트 티켓 구매 문의",lv:"Int",
+a:`Hi, I'm calling to ask about tonight's concert. I wanna buy two tickets.
+Can you give me any recommendations? Do you have a website I can see by any chance? Plus, I wonder if you have any promotions currently. How much are the tickets? Are they 80 dollars each? Do you have any group discounts?
+Also, can you give me some directions to the theater? Is there a parking lot? If not, I'll just take the subway. Is it close to the subway station? Is it within walking distance?
+Please get back to me ASAP. Thank you. Bye!`,
+x:[["I'm calling to ask about ~","~에 대해 문의하려고 전화했어요"],["by any chance","혹시"],["I wonder if ~","~인지 궁금해요"],["within walking distance","걸어갈 만한 거리"],["Please get back to me ASAP","최대한 빨리 연락 주세요"]]});
+A({t:"rp_concert",n:"롤플레이: 콘서트",rp:1,q:"I'm sorry, but there is a problem I need you to resolve. On the day of the concert, you got sick and you cannot go. Call your friend, explain the situation and suggest two or three alternatives.",k:"12번 친구에게 콘서트 아파서 못 가게 되어 설명",lv:"Adv",
+a:`Hey, Jake. It's me, Brian. I'm so sorry but I have some bad news. I feel terrible and I don't think I can make it to the concert tonight.
+I think I got a cold. I have a high fever and a sore throat. What do you wanna do? Why don't we go next time? How about next weekend?
+I'm so sorry. I'll make it up to you later. Call me back when you get this, okay? I'll talk to you later, bye.`,
+x:[["I have some bad news","안 좋은 소식이 있어"],["I can't make it to ~","~에 못 갈 것 같아"],["a high fever and a sore throat","고열과 인후통"],["Why don't we ~? / How about ~?","대안 제시"],["I'll make it up to you later","나중에 꼭 보답할게"]]});
+A({t:"rp_concert",n:"롤플레이: 콘서트",rp:1,q:"That's the end of the situation. Have you ever had to cancel your plans because of an unexpected situation? Tell me what happened and how you dealt with it.",k:"13번 과거에 계획 취소 경험 (친구와 약속을 못 지킨 경험)",lv:"Adv",
+a:`I was supposed to go on a trip with my friends a few years ago. I was excited about the trip. We were actually going to go to Japan.
+But I got COVID-19 a few days before the trip. I got really sick. I had a high fever and a sore throat.
+I told my friends that I couldn't make it. I felt really bad. Looking back, I regret missing that trip that day.`,
+x:[["was supposed to ~","~하기로 되어 있었다"],["got COVID-19","코로나에 걸렸다"],["I couldn't make it","못 가게 됐다"],["I regret missing ~","~를 놓친 게 후회된다"]]});
+// Phones
+A({t:"phone",n:"전화기(기술)",q:"Tell me about the phone you use. What features do you like the most and how do you use your phone every day?",k:"전화기에 대해 가장 좋아하는 기능 (일상 기술)",lv:"Int",
+a:`I can get access to the internet on my cell phone. So, I use my cell phone to surf the internet every single day. I do everything on my cell phone.
+I do searches, send email, and buy things online on my phone. I take pictures with my phone and post them up on the spot. Plus, I use my cell phone to stream music or watch video clips. Next, I use my cell phone to chat with people. Also, I use a messaging app called Kakao Talk most often. And then, I use my cell phone as my GPS.
+Well, I cannot live without my smartphone now.`,
+x:[["every single day","매일매일"],["post them up on the spot","바로 올리다"],["stream music / watch video clips","음악 스트리밍 / 영상 보기"],["I cannot live without ~","~없이는 못 산다"]]});
+A({t:"phone",n:"전화기(기술)",q:"Compare the first phone you used to the phone you use now. How has technology changed?",k:"14번 본인이 썼던 첫 전화기와 지금 전화기 비교 (기술 변화)",lv:"Adv",
+a:`My first cell phone was just a phone. I mean, I was able to just make calls and send messages. And yeah! That was it!
+But now, phones have changed a lot over the years. They are called smartphones, you know. Like I told you, I can do tons of things on my cell phone. I can surf the internet, do searches, and check my email. I can also listen to music or watch movies.
+We call smartphones all-in-one devices. Anyway, phones are amazing these days.`,
+x:[["was just a phone","그냥 전화기였다"],["make calls and send messages","전화 걸고 문자 보내기"],["That was it!","그게 다였어요!"],["have changed a lot over the years","수년간 많이 변했다"],["all-in-one devices","만능 기기"]]});
+A({t:"phone",n:"전화기(기술)",q:"Tell me about a problem you had while using your phone. What happened and how did you solve it?",k:"전화기 사용 중 문제 (만능 에피소드: 핸드폰 떨어뜨린 경험)",lv:"Adv",
+a:`Well, okay. A few weeks ago, I went to Starbucks near my house to meet my friends. Anyway, I was doing something on my phone while ordering my coffee. And I accidentally dropped my phone on the ground.
+And guess what happened? The screen cracked! It was so frustrating because it was a brand-new phone. It was very expensive, you know? Anyway, I went to the service center and it cost 400 dollars!
+Yeah, I need to pay more attention.`,
+x:[["while ordering my coffee","커피 주문하다가"],["I need to pay more attention","더 조심해야겠다"],["만능 에피소드","커피숍 2번 재활용"]]});
+A({t:"phone",n:"전화기(기술)",q:"What are some social issues related to phones these days? Why are people concerned about them?",k:"15번 전화기 관련 사회적 문제",lv:"Adv",
+a:`Many youngsters are addicted to their phones. They constantly chat with friends on messaging apps. They also post things or leave messages on social media very frequently.
+Meanwhile, there are many side effects coming from too much phone use. First, there are physical side effects. People's eyesight gets worse. Some people suffer from back problems, neck problems or shoulder pain because of bad posture.
+Next, there are social side effects. Because people are constantly on their phones, they have less conversations with other people. They cannot develop face-to-face communication skills.
+We are addicted to our phones.`,
+x:[["are addicted to ~","~에 중독되어 있다"],["side effects","부작용"],["eyesight gets worse","시력이 나빠진다"],["suffer from ~ because of bad posture","나쁜 자세 때문에 ~로 고생한다"],["face-to-face communication skills","대면 소통 능력"]]});
+// Internet
+A({t:"internet",n:"인터넷",q:"What kinds of videos do you watch on the internet when you have free time? Why do you like watching them?",k:"인터넷에서 시간 날 때 무슨 동영상 보는지",lv:"Int",
+a:`When it comes to videos, I just watch everything from news clips to sports clips. I sometimes watch movie trailers. And I sometimes watch eating shows.
+Among them, I like to watch Korean TV clips. Because Korean TV shows have become much better in quality than in the past. They are very fun to watch.
+You know, I also take online classes to learn things. It's super convenient. It takes much less effort and time to learn things.
+So, once again, I watch everything when it comes to videos.`,
+x:[["from A to B","A부터 B까지"],["movie trailers","영화 예고편"],["eating shows","먹방"],["take online classes","온라인 강의를 듣다"]]});
+A({t:"internet",n:"인터넷",q:"Tell me everything you did on the internet yesterday. What websites did you visit and what did you do?",k:"어제 인터넷으로 뭐 했는지",lv:"Adv",
+a:`I did tons of things on the internet yesterday. I did searches, sent email, and bought some stuff online. Next, I listened to music and watched video clips online. Plus, I checked the news and the weather forecast. Also, I posted pictures and left comments on social media. And then, I played mobile games on my cell phone. Last of all, I did mobile banking on my phone.
+So yeah! I did tons of stuff online yesterday on my smartphone.`,
+x:[["did tons of things","많은 걸 했다"],["the weather forecast","일기예보"],["left comments","댓글을 달았다"],["did mobile banking","모바일 뱅킹을 했다"],["Next / Plus / Also / Last of all","나열 연결어"]]});
+A({t:"shopping",n:"쇼핑",q:"What are some hot items or services people talk about these days? Why are they so popular?",k:"15번 사람들이 요즘 많이 언급하는 핫한 상품이나 서비스",lv:"Adv",
+a:`People talk a lot about music devices these days. They listen to music on their cell phones. First, you can stream music on your cell phone. Plus, you can store hundreds of songs on your cell phone. Next, the sound quality is pretty good. And then, you can listen to the same song over and over again.
+Meanwhile, cell phones have Bluetooth functions on them. So, you can connect them to various types of devices. You can connect them to your Bluetooth headsets or speakers. It's very convenient because you don't need any wires. I also use Bluetooth quite often myself to listen to music.
+Once again, one of the hottest items people talk about is Bluetooth devices.`,
+x:[["store hundreds of songs","수백 곡을 저장하다"],["over and over again","반복해서"],["one of the hottest items","가장 핫한 아이템 중 하나"],["음악 6번 답변 활용","블루투스 답변 재활용"]]});
+// ===== 생성 답변 (슬라이드 강조 표현 활용) =====
+A({t:"intro",n:"자기소개",gen:1,q:"Let's start the interview now. Tell me a little bit about yourself.",k:"1번 자기소개",lv:"Int",
+a:`Hi, my name is Minsu Kim. Well, let me tell you a little bit about myself. I'm a college student and I'm majoring in political science and business.
+I live in an apartment with my family. It's a cozy place and I really like my room. It's definitely the best place to get some rest.
+When it comes to hobbies, I just do everything from listening to music to watching movies. I also like to go to coffee shops to hang out with my friends.
+I'm a pretty outgoing person, and I love meeting new people. Looking back, I've had tons of good experiences in school.
+So yeah, that's a little bit about me. Thank you.`,
+x:[["let me tell you a little bit about myself","제 소개를 조금 할게요"],["I'm majoring in ~","~를 전공하고 있어요"],["When it comes to hobbies","취미에 관해서는"],["outgoing","외향적인"],["팁","자기소개는 채점에 거의 반영 안 됨 → 1분 이내로 편하게 워밍업"]]});
+A({t:"appliance",n:"가전제품",gen:1,q:"Tell me about the home appliances you have at home. What are they and how do you use them?",k:"집에 있는 가전제품 묘사",lv:"Int",
+a:`We have various types of home appliances at home. In the kitchen, we have a fridge, a microwave, a stove and a dishwasher. In the living room, there is a big TV and an air conditioner. And we also have a washing machine and a vacuum cleaner.
+Among them, my favorite is the robot vacuum cleaner. You know, it cleans the floors by itself. I can do other stuff while it's cleaning. It's super convenient.
+I also use the microwave every single day. I heat up some food when I'm hungry. It takes much less effort and time.
+So yeah, I cannot live without these home appliances.`,
+x:[["various types of home appliances","다양한 가전제품"],["by itself","혼자서, 알아서"],["heat up some food","음식을 데우다"],["It takes much less effort and time","노력과 시간이 훨씬 덜 든다"]]});
+A({t:"appliance",n:"가전제품",gen:1,q:"Tell me about a time when one of your home appliances broke down. What happened and how did you deal with it?",k:"가전제품 고장 경험",lv:"Adv",
+a:`Well, okay. I think it was about 2 years ago? It was a really hot summer day. And guess what happened? Our air conditioner suddenly stopped working.
+It was really frustrating because it was so hot. I couldn't sleep at all. I tried to fix it myself but it didn't work. So, I called the service center to get it fixed. But it was the peak season, so I had to wait for 3 days!
+Anyway, the repairman finally came and fixed it. It cost me 100 dollars, but it was worth the money I spent.
+Since then, I check the air conditioner before summer every year.`,
+x:[["stopped working","작동을 멈췄다"],["get it fixed","수리 받다"],["the peak season","성수기"],["it was worth the money I spent","쓴 돈이 아깝지 않았다"],["Since then, ~","그 이후로 (교훈 마무리)"]]});
+A({t:"appliance",n:"가전제품",gen:1,q:"How have home appliances changed over the years? Compare the appliances you had when you were young to the ones you have now.",k:"14번 가전제품 과거-현재 비교",lv:"Adv",
+a:`When I was a kid, home appliances were very simple. I mean, our TV was small and heavy. And we didn't have a dishwasher or a robot vacuum cleaner. We had to do everything by ourselves.
+But now, home appliances have become much better than in the past. They are a lot smarter these days. For instance, I can control the air conditioner on my cell phone. I can turn it on when I'm on the move. And robot vacuum cleaners clean the floors by themselves.
+Plus, they are much more energy-efficient. You can save a lot of money on electricity bills.
+Once again, home appliances have become a lot better than in the past.`,
+x:[["have become much better than in the past","과거보다 훨씬 나아졌다"],["control ~ on my cell phone","휴대폰으로 ~를 조작하다"],["energy-efficient","에너지 효율이 좋은"],["electricity bills","전기 요금"]]});
+A({t:"appliance",n:"가전제품",gen:1,q:"What are some hot new home appliances people talk about these days? Why are people interested in them?",k:"15번 요즘 화제가 되는 가전제품",lv:"Adv",
+a:`People talk a lot about smart home appliances these days. You know, they are connected to the internet. So, you can control them on your cell phone. You can turn on the air conditioner or the washing machine wherever you are, whenever you want to.
+Plus, robot vacuum cleaners are really big in Korea. They clean the floors by themselves, so it takes much less effort and time. And people are also interested in clothes care machines. They get rid of dust and smells from your clothes.
+These appliances are a bit pricey, but I think they are worth the money.
+Once again, one of the hottest items people talk about is smart home appliances.`,
+x:[["smart home appliances","스마트 가전"],["wherever you are, whenever you want to","언제 어디서나"],["really big in Korea","한국에서 엄청 인기"],["a bit pricey, but worth the money","좀 비싸지만 그만한 가치"]]});
+A({t:"rp_furniture",n:"롤플레이: 가구",rp:1,gen:1,q:"I'd like to give you a situation and ask you to act it out. You want to buy some new furniture. Call a furniture store and ask three or four questions about the furniture you want to buy.",k:"11번 가구점에 가구 구매 문의",lv:"Int",
+a:`Hi, I'm calling to ask about some furniture. I wanna buy a new sofa and a tea table for my living room.
+Can you give me any recommendations? Do you have a website I can see by any chance? What colors and sizes do you have? Plus, I wonder if you have any promotions currently. How much is the sofa? Do you have any special discounts?
+Also, do you offer free delivery? How long does it take to get it delivered? Can you set it up for me?
+Please get back to me ASAP. Thank you. Bye!`,
+x:[["I'm calling to ask about ~","~에 대해 문의하려고 전화했어요"],["Do you offer free delivery?","무료 배송 되나요?"],["How long does it take to ~?","~하는 데 얼마나 걸려요?"],["콘서트 11번 틀 재활용","질문 3~4개 + 마무리 공식"]]});
+A({t:"rp_furniture",n:"롤플레이: 가구",rp:1,gen:1,q:"I'm sorry, but there is a problem I need you to resolve. When the furniture was delivered, you found that it was damaged. Call the store, explain the situation and suggest two or three alternatives.",k:"12번 배송된 가구 파손, 대안 제시",lv:"Adv",
+a:`Hi, I'm calling about the sofa I bought last week. I'm so sorry but I have a problem. The sofa got delivered this morning, but it got damaged.
+One of the legs broke and there are some marks on it. Plus, the color is different from what I ordered. It was really frustrating.
+What do you want me to do? Can you send me a new one? Or can I get an exchange? If not, I'd like to get a refund.
+Please get back to me ASAP. Thank you.`,
+x:[["got damaged","손상됐다"],["is different from what I ordered","주문한 거랑 달라요"],["get an exchange / a refund","교환 / 환불 받다"],["집 6번 표현 활용","legs broke, marks"]]});
+A({t:"rp_furniture",n:"롤플레이: 가구",rp:1,gen:1,q:"That's the end of the situation. Have you ever had a problem with something you bought? Tell me what happened and how you resolved it.",k:"13번 구매한 물건에 문제 있었던 경험",lv:"Adv",
+a:`Okay, I bought a sweater online about 2 years ago. I got it on eBay.
+Anyway, I got my sweater, but the store sent me the wrong size. I tried it on, but it didn't fit me.
+Even worse, the quality was much lower than I expected. Eventually, I sent it back and got a refund.
+Since then, I don't buy clothes online that often.`,
+x:[["쇼핑 3번 재활용","구매 문제 경험은 스웨터 에피소드 하나로"]]});
+A({t:"rp_movie",n:"롤플레이: 영화",rp:1,gen:1,q:"I'd like to give you a situation and ask you to act it out. You want to see a movie this weekend. Call a movie theater and ask three or four questions about the movie.",k:"11번 영화관에 영화 문의",lv:"Int",
+a:`Hi, I'm calling to ask about the movies this weekend. I wanna watch a movie with my friend.
+What movies are playing this Saturday? Can you give me any recommendations? What time does the movie start? Plus, I wonder if you have any promotions currently. How much are the tickets? Do you have any student discounts?
+Also, is there a parking lot? If not, I'll just take the subway. Is it within walking distance from the subway station?
+Please get back to me ASAP. Thank you. Bye!`,
+x:[["What movies are playing ~?","~에 무슨 영화 해요?"],["student discounts","학생 할인"],["콘서트 11번 틀 재활용","장소만 바꾸기"]]});
+A({t:"rp_movie",n:"롤플레이: 영화",rp:1,gen:1,q:"I'm sorry, but there is a problem I need you to resolve. When you arrived at the theater, you found out that the tickets were sold out. Call your friend, explain the situation and suggest two or three alternatives.",k:"12번 영화 매진, 친구에게 대안 제시",lv:"Adv",
+a:`Hey, Jake. It's me, Brian. I'm so sorry but I have some bad news. I'm at the theater now, but the movie is completely sold-out.
+What do you wanna do? Why don't we watch another movie? There is an action movie at 8. Or how about watching it next weekend? We can also grab some drinks at a pub near the theater instead.
+I'm so sorry. I'll make it up to you later. Call me back when you get this, okay? I'll talk to you later, bye.`,
+x:[["completely sold-out","완전 매진"],["Why don't we ~? / How about ~?","대안 제시"],["instead","대신에"],["콘서트 12번 틀 재활용","상황만 바꾸기"]]});
+A({t:"rp_movie",n:"롤플레이: 영화",rp:1,gen:1,q:"That's the end of the situation. Have you ever had a problem when you went to see a movie? Tell me what happened and how you dealt with it.",k:"13번 영화 보러 갔다가 문제 생긴 경험",lv:"Adv",
+a:`Well, okay. A few weeks ago, I went to a movie theater near my house with my friends. We were supposed to watch the Zootopia sequel.
+But guess what happened? I left my wallet at home! I couldn't buy the tickets and I felt really bad. My friend paid for my ticket that day.
+After the movie, I bought dinner for my friend to make it up to him. Since then, I always check my wallet before I go out.`,
+x:[["were supposed to ~","~하기로 되어 있었다"],["I left my wallet at home","지갑을 집에 두고 왔다"],["to make it up to him","보답하기 위해"],["Since then, I always ~","그 이후로 항상 ~"]]});
+A({t:"housing",n:"집",gen:1,q:"What kinds of homes do people in your country live in? How have homes in your country changed over the years?",k:"14번 우리나라 주거 형태 변화",lv:"Adv",
+a:`Back in the day, most people lived in small houses in Korea. There were playgrounds near the houses and kids used to play there with their friends.
+But these days, most people live in apartments. There are tons of apartments everywhere in Korea. Apartments are more spacious and there are various types of stores and facilities nearby.
+However, apartments are extremely expensive these days. It's causing a lot of stress for many people.
+So, overall, homes in Korea have changed quite a lot over the years.`,
+x:[["Back in the day / But these days","과거 / 현재 비교 공식"],["have changed quite a lot over the years","수년간 많이 변했다"],["집 3번·8번 표현 활용","small house, spacious, extremely expensive"]]});
+</script>
+<script>
+const TOPICS={
+ intro:{n:"자기소개",c:"공통"},housing:{n:"집",c:"공통"},restaurant:{n:"음식점",c:"공통"},gather:{n:"모임/기념일",c:"공통"},
+ otrip:{n:"해외여행",c:"공통"},geo:{n:"지형",c:"공통"},phone:{n:"전화기(기술)",c:"공통"},internet:{n:"인터넷",c:"공통"},appliance:{n:"가전제품",c:"공통"},
+ music:{n:"음악 감상",c:"선택"},movies:{n:"영화",c:"선택"},coffee:{n:"커피숍",c:"선택"},bars:{n:"술집/바",c:"선택"},
+ dtrip:{n:"국내여행",c:"선택"},vacation:{n:"집에서 보내는 휴가",c:"선택"},shopping:{n:"쇼핑",c:"선택"},
+ rp_concert:{n:"콘서트",c:"롤플레이"},rp_furniture:{n:"가구 구매",c:"롤플레이"},rp_movie:{n:"영화 예매",c:"롤플레이"}
+};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={get(k,d){try{const v=localStorage.getItem("opic_"+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("opic_"+k,JSON.stringify(v))}catch(e){}}};
+let done=new Set(store.get("done",[]));
+const saveDone=()=>store.set("done",[...done]);
+const byTopic=t=>DB.filter(q=>q.t===t);
+const hasKo=s=>/[가-힣]/.test(s);
+
+/* ---------- 음성(TTS) ---------- */
+let T=null,onLineCb=null,ttsReady=false;
+const hasSS=typeof speechSynthesis!=="undefined";
+function splitSent(text){return text.replace(/\n+/g," \n ").split(/(?<=[.!?])\s+(?=[A-Z"(\n])|\s*\n\s*/).map(s=>s.trim()).filter(Boolean)}
+let ssRate=store.get("rate",1);
+let enVoice=null;
+function pickVoice(){if(!hasSS)return;try{const vs=speechSynthesis.getVoices();enVoice=vs.find(v=>/en[-_]US/i.test(v.lang)&&/google|samantha|female/i.test(v.name))||vs.find(v=>/en[-_]US/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null}catch(e){}}
+if(hasSS){pickVoice();try{speechSynthesis.onvoiceschanged=pickVoice}catch(e){}}
+let speakToken=0,audioOK=store.get("audioOK",false);
+function stopSpeak(){speakToken++;try{T&&T.stop()}catch(e){}try{hasSS&&(speechSynthesis.speaking||speechSynthesis.pending)&&speechSynthesis.cancel()}catch(e){}}
+function noAudio(){if(audioOK)return;showAudioBanner()}
+function speak(lines,onLine){
+ stopSpeak();const tok=speakToken;onLineCb=onLine||null;
+ if(typeof lines==="string")lines=[lines];
+ if(T){return T.speak(lines.map((t,i)=>({text:t,id:String(i),language:"en",rate:ssRate})),{voice:"airy"}).then(()=>{audioOK=true;store.set("audioOK",true)}).catch(e=>{if(e&&e.code!=="viewer_stopped")noAudio()})}
+ if(!hasSS){noAudio();return Promise.resolve()}
+ return new Promise(res=>{let i=0,started=false;
+  const guard=setTimeout(()=>{if(!started&&tok===speakToken){noAudio();res()}},2500);
+  const next=()=>{if(tok!==speakToken)return res();if(i>=lines.length){clearTimeout(guard);onLineCb&&onLineCb(-1);return res()}
+  const u=new SpeechSynthesisUtterance(lines[i]);u.lang="en-US";if(enVoice)u.voice=enVoice;u.rate=ssRate*0.95;const idx=i;
+  u.onstart=()=>{started=true;if(!audioOK){audioOK=true;store.set("audioOK",true);hideAudioBanner()}onLineCb&&onLineCb(idx)};
+  u.onend=()=>{i++;next()};u.onerror=e=>{if(e.error==="interrupted"||e.error==="canceled")return res();clearTimeout(guard);noAudio();res()};
+  try{speechSynthesis.resume();speechSynthesis.speak(u)}catch(e){noAudio();res()}};next()});
+}
+const APP_URL="https://claude.ai/artifact/JLNFEEWAHQJSLXj7CcXsRY";
+function showAudioBanner(){if(document.getElementById("abn"))return;if(!window.claude){alertBox("음성이 안 나와요. 휴대폰 설정 → 일반 → 텍스트 음성 변환(TTS)에서 Google 음성 엔진과 영어(미국) 음성을 설치·선택한 뒤 다시 눌러 보세요. 무음 모드도 꺼 주세요.");return}const d=document.createElement("div");d.id="abn";d.className="modal";
+ d.innerHTML=`<div class="card"><b>이 화면에서는 음성이 안 나와요</b><div class="note" style="font-size:14px;color:var(--ink2);margin-top:8px">Claude 앱 안에서는 음성 재생이 막혀 있어요(특히 안드로이드). <b>크롬 브라우저로 열면</b> 질문·모범답변 음성과 🎤 음성인식이 함께 돼요.<br><br>① 아래 버튼으로 열거나 ② 주소를 복사해 크롬 주소창에 붙여넣고 claude.ai에 로그인하세요.</div>
+ <div class="row" style="margin-top:12px"><a class="btn pri" href="${APP_URL}" target="_blank" rel="noopener" style="text-decoration:none">크롬에서 열기</a><button class="btn" id="cpy">주소 복사</button><button class="btn" id="cls">닫기</button></div>
+ <div class="note" style="word-break:break-all;margin-top:8px">${APP_URL}</div><div class="note">음성 없이도 자막·빈칸·채점 연습은 그대로 쓸 수 있어요.</div></div>`;
+ document.body.appendChild(d);d.querySelector("#cls").onclick=()=>d.remove();
+ d.querySelector("#cpy").onclick=e=>{navigator.clipboard.writeText(APP_URL).then(()=>e.target.textContent="복사됨 ✓").catch(()=>e.target.textContent="위 주소를 길게 눌러 복사")}}
+function hideAudioBanner(){const d=document.getElementById("abn");d&&d.remove()}
+/* ---------- 음성인식 ---------- */
+let D=null,dictTarget=null,dictBase="",dictBtn=null,webRec=null;
+function setRecBtn(on){if(!dictBtn)return;dictBtn.classList.toggle("rec",on);dictBtn.innerHTML=on?"■ 말하기 끝내기":"🎤 말하기 시작"}
+function micToggle(btn,ta){
+ if(dictBtn===btn&&btn.classList.contains("rec")){if(D)D.stop().catch(()=>{});else if(webRec)webRec.stop();setRecBtn(false);return}
+ stopSpeak();dictBtn=btn;dictTarget=ta;dictBase=ta.value.trim();
+ if(D){D.start().then(()=>setRecBtn(true)).catch(e=>{setRecBtn(false);micFail(ta,e&&e.code)});setRecBtn(true);return}
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(SR){try{webRec=new SR();webRec.lang="en-US";webRec.continuous=true;webRec.interimResults=true;
+  webRec.onresult=ev=>{let fin="",par="";for(let i=0;i<ev.results.length;i++){const r=ev.results[i];(r.isFinal?(fin+=r[0].transcript+" "):(par+=r[0].transcript))}ta.value=(dictBase+" "+fin+par).trim();ta.dispatchEvent(new Event("input"))};
+  webRec.onerror=e=>{setRecBtn(false);micFail(ta,e.error)};webRec.onend=()=>setRecBtn(false);webRec.start();setRecBtn(true);return}catch(e){}}
+ micFail(ta,"none");
+}
+function micFail(ta,code){const n=ta.parentElement.querySelector(".micnote");if(n){n.classList.remove("hidden");n.textContent=(code==="not-allowed"||code==="service-not-allowed")?"마이크가 차단돼 있어요. 크롬 주소창 왼쪽 아이콘 → 권한 → 마이크 → 허용으로 바꾼 뒤 새로고침하세요.":code==="no-speech"?"소리가 안 들렸어요. 🎤를 다시 누르고 말해 보세요.":code==="network"?"인터넷 연결이 필요해요(크롬 음성인식은 온라인으로 동작해요).":code==="not_granted"?"마이크 권한이 꺼져 있어요. 키보드의 🎤 음성 입력으로 말하면 똑같이 채점돼요.":"이 화면에서는 음성인식을 바로 쓸 수 없어요. 휴대폰 키보드의 🎤 음성 입력 버튼을 눌러 영어로 말하면 칸에 받아써지고, 그대로 채점돼요. (컴퓨터 크롬에서 열면 이 버튼으로 바로 인식돼요)"}}
+function initCaps(){
+ if(!window.claude||!claude.use)return;
+ claude.use("tts").then(t=>{if(!t)return;T=t;try{t.onLine(({id})=>onLineCb&&onLineCb(+id));t.onState(({state})=>{if(state==="idle"&&onLineCb)onLineCb(-1)})}catch(e){}}).catch(()=>{});
+ claude.use("dictation").then(d=>{if(!d)return;D=d;
+  let committed="";
+  d.onState(({state})=>{if(state==="listening"){committed=dictBase}setRecBtn(state==="listening")});
+  d.onPartial(({text})=>{if(dictTarget){dictTarget.value=(committed+" "+text).trim();dictTarget.dispatchEvent(new Event("input"))}});
+  d.onFinal(({text})=>{committed=(committed+" "+text).trim();if(dictTarget){dictTarget.value=committed;dictTarget.dispatchEvent(new Event("input"))}});
+ }).catch(()=>{});
+ claude.use("sample").then(s=>{if(s){window.SAMPLE=s;document.querySelectorAll(".needai").forEach(e=>e.classList.remove("hidden"))}}).catch(()=>{});
+}
+
+/* ---------- 채점 로직 ---------- */
+const CONN=["because","so","but","and then","also","plus","anyway","actually","you know","i mean","for example","for instance","first","after that","looking back","since then","when it comes to","however","once again","in fact","on top of that","to be honest","honestly","among them","even worse","eventually","meanwhile","while","when i","if not","back in the day","these days","but now","so yeah","let me","guess what","which","that's because","as i mentioned","like i told you","overall","next","last but not least"];
+const STOP=new Set("a an the and or but so to of in on at for with is are was were be been i you he she it we they my your our their me this that there here do did does have has had can could would will not no just very really some any about as by from up out what how when where why who which then than too also more much many lot lots tell give".split(" "));
+const words=s=>(s.toLowerCase().match(/[a-z']+/g)||[]);
+function exprParts(e){return e.toLowerCase().replace(/\(.*?\)/g,"").split("/").map(p=>p.split("~").map(x=>x.replace(/[^a-z' ]/g," ").replace(/\s+/g," ").trim()).filter(x=>x.length>1)).filter(a=>a.length)}
+function exprHit(e,text){const t=" "+words(text).join(" ")+" ";return exprParts(e).some(parts=>parts.every(p=>t.includes(" "+p+" ")||t.includes(" "+p)))}
+function qType(q){const k=q.k;if(q.rp){if(/11번/.test(k))return"rp11";if(/12번/.test(k))return"rp12";return"rp13"}
+ if(/15번|문제|이슈|걱정|우려|화제|중요성|핫한/.test(k)&&/15번/.test(k))return"issue";
+ if(/14번|비교|변화|차이/.test(k))return"compare";
+ if(/경험|에피소드|사건|추억|기억|최근|지난|어렸을|처음|어제|마지막/.test(k))return"past";
+ if(/자기소개/.test(k))return"intro";return"desc"}
+const TIPS={
+ desc:"묘사형: 도입(Well, let me tell you about ~) → 큰 그림 → 세부 2~3개(위치·분위기·특징) → 마무리(So yeah, that's ~). 현재시제를 일관되게 유지하세요.",
+ past:"경험형: 언제·누구와·어디서 → 무슨 일이 있었는지 → 감정·결과 → Looking back / Since then 으로 마무리. 과거시제(went, was, had)를 꼭 지키세요.",
+ compare:"비교형(14번): 과거(When I was a kid / Back in the day, used to) → 현재(But now / these days) → 공통점·차이점 → Once again 으로 결론 반복.",
+ issue:"이슈형(15번): 한 문장 결론(One of the biggest ~ is ~) → 이유·예시 2개(First / Next, For instance) → 사람들의 반응·대처 → 결론 반복.",
+ rp11:"롤플레이 11번: 인사 + 전화 목적(I'm calling to ask about ~) → 질문 3~4개(Can you / Do you / I wonder if) → Please get back to me ASAP.",
+ rp12:"롤플레이 12번: 상황 설명(I'm so sorry but I have some bad news) → 이유 → 대안 2~3개(Why don't we / How about) → 사과·마무리.",
+ rp13:"롤플레이 13번: 비슷한 과거 경험. 경험형처럼 과거시제로 시작-문제-해결-느낀 점 순서.",
+ intro:"자기소개는 채점에 거의 반영되지 않아요. 이름·전공·사는 곳·취미 정도로 1분 안에 편하게 워밍업하세요."};
+function scoreAnswer(q,text){
+ const w=words(text),n=w.length,type=qType(q),adv=q.lv==="Adv";
+ if(n<3)return{total:0,n,hits:[],conn:0,lvl:"-"};
+ const len=Math.min(n/(adv?130:95),1)*35;
+ const lt=" "+w.join(" ")+" ";let conn=0;CONN.forEach(c=>{const m=lt.split(" "+c+" ").length-1;conn+=Math.min(m,2)});
+ const connS=Math.min(conn/7,1)*20;
+ const uniq=new Set(w).size/n;const div=Math.max(0,Math.min((uniq-.32)/.28,1))*15*Math.min(n/60,1);
+ let tense=10*Math.min(n/50,1);
+ if(type==="past"||type==="compare"||type==="rp13"){const pm=(text.toLowerCase().match(/\b(was|were|had|went|did|got|used to|ago|\w+ed)\b/g)||[]).length;tense=Math.min(pm/6,1)*10}
+ if(type==="rp11"){const qs=(text.match(/\?/g)||[]).length+(lt.match(/ (can you|do you|is there|are there|how much|what time|i wonder|could you|is it) /g)||[]).length;tense=Math.min(qs/4,1)*10}
+ const qw=new Set(words(q.q).filter(x=>!STOP.has(x)&&x.length>3));const rel=[...qw].filter(x=>w.includes(x)).length;
+ const relS=Math.min(rel/Math.min(4,qw.size||1),1)*10;
+ const hits=q.x.filter(x=>!hasKo(x[0])&&exprHit(x[0],text));
+ const exS=Math.min(hits.length/3,1)*10;
+ const total=Math.round(len+connS+div+tense+relS+exS);
+ return{total,n,hits:hits.map(h=>h[0]),conn,lvl:toGrade(total)};
+}
+const LADDER=["NL","NM","NH","IL","IM1","IM2","IM3","IH","AL"];
+function toGrade(s){return s<15?"NL":s<22?"NM":s<30?"NH":s<38?"IL":s<46?"IM1":s<54?"IM2":s<62?"IM3":s<74?"IH":"AL"}
+
+/* ---------- 화면 ---------- */
+let tab="home";
+function go(t){tab=t;stopSpeak();document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.tab===t||(t==="topic"||t==="q")&&b.dataset.tab==="practice"));window.scrollTo(0,0)}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(EX&&EX.running&&!confirm2())return;b.dataset.tab==="home"?home():b.dataset.tab==="practice"?practice():mockStart()});
+function confirm2(){EX.running=false;return true}
+
+function home(){go("home");
+ const total=DB.length,d=DB.filter(q=>done.has(q.id)).length,last=store.get("lastGrade",null);
+ $("#app").innerHTML=`<header class="top"><div class="brand">OPIc<span>.</span>trainer</div><div class="sub">IH · AL 목표</div></header>
+ <section class="hero"><div class="dots"></div><div class="dots2"></div>
+  <h1>듣고, 말하고,<br>외워서 실전까지.</h1><p>모범답변 ${total}개 · 음성인식 채점 · 실제 진행과 같은 15문항 모의고사</p>
+  <div class="stat"><div><b>${d}/${total}</b>연습 완료</div><div><b>${last?last.g:"—"}</b>최근 예상등급</div><div><b>${Object.keys(TOPICS).length}</b>주제</div></div></section>
+ <div class="row" style="margin-bottom:10px"><button class="btn" id="snd" style="flex:1;justify-content:center">🔊 소리 테스트</button></div><div class="row" style="gap:10px"><button class="btn pri" id="gp" style="flex:1;justify-content:center;padding:14px">연습 시작</button><button class="btn acc" id="gm" style="flex:1;justify-content:center;padding:14px">실전 모의고사</button></div>
+ <h2 class="sec">이렇게 연습하세요</h2>
+ <div class="card" style="font-size:14px;color:var(--ink2)">
+ <b style="color:var(--ink)">1. 자막 보기</b> — 질문과 모범답변을 들으며 따라 읽기 (문장을 누르면 그 문장만 재생)<br>
+ <b style="color:var(--ink)">2. 힌트 / 빈칸</b> — 문장 앞부분만 보거나 핵심 표현을 가리고 채워 말하기<br>
+ <b style="color:var(--ink)">3. 자막 가리기</b> — 텍스트 없이 질문만 듣고 🎤로 답변 → 핵심표현 사용 여부·예상 레벨 채점<br>
+ <b style="color:var(--ink)">4. 실전 모의고사</b> — 서베이·자가진단 → 15문항(콤보 3세트·롤플레이·14/15번) → 예상등급</div>`;
+ $("#gp").onclick=practice;$("#gm").onclick=mockStart;$("#snd").onclick=()=>{audioOK=false;speak(["Hello! Let's start the OPIc interview."])};
+}
+function practice(){go("practice");
+ const groups=["공통","선택","롤플레이"];
+ $("#app").innerHTML=`<header class="top"><div class="brand">연습<span>.</span></div><div class="sub">주제를 고르세요</div></header>`+
+ groups.map(g=>`<h2 class="sec">${g==="공통"?"공통형 주제 <small>돌발로 자주 나와요</small>":g==="선택"?"선택형 주제 <small>서베이에서 고르는 주제</small>":"롤플레이 <small>11·12·13번 세트</small>"}</h2><div class="grid">`+
+  Object.entries(TOPICS).filter(([k,v])=>v.c===g&&byTopic(k).length).map(([k,v])=>{const qs=byTopic(k),d=qs.filter(q=>done.has(q.id)).length;
+   return`<button class="topic" data-t="${k}"><span class="kind ${g==="공통"?"c":g==="롤플레이"?"r":""}">${g}</span><div class="tn" style="margin-top:6px">${v.n}</div><div class="tc">${qs.length}문항 · ${d}개 완료</div><div class="bar"><i style="width:${qs.length?d/qs.length*100:0}%"></i></div></button>`}).join("")+`</div>`).join("");
+ document.querySelectorAll(".topic").forEach(b=>b.onclick=()=>topic(b.dataset.t));
+}
+function topic(t){go("topic");const qs=byTopic(t);
+ $("#app").innerHTML=`<button class="back" id="bk">← 주제 목록</button><header class="top"><div class="brand" style="font-size:22px">${TOPICS[t].n}</div><div class="sub">${TOPICS[t].c}형</div></header><div class="list">`+
+ qs.map((q,i)=>`<button class="qrow ${done.has(q.id)?"done":""}" data-i="${q.id}"><div class="num">${done.has(q.id)?"✓":i+1}</div><div><div class="qk"><span class="lv ${q.lv}">${q.lv}</span>${esc(q.k)}${q.gen?'<span class="gen">· 추가 답변</span>':""}</div><div class="sub" style="margin-top:3px">${esc(q.q.slice(0,90))}…</div></div></button>`).join("")+`</div>`;
+ $("#bk").onclick=practice;document.querySelectorAll(".qrow").forEach(b=>b.onclick=()=>qview(b.dataset.i));
+}
+function renderAnswer(q,mode){
+ const paras=q.a.split("\n");let si=0;const exprs=q.x.filter(x=>!hasKo(x[0])).map(x=>x[0]);
+ return paras.map(p=>"<p>"+splitSent(p).map(s=>{
+  let h=esc(s);
+  if(mode==="blank"||mode==="show"){exprs.forEach(e=>{exprParts(e).forEach(parts=>parts.forEach(pt=>{if(pt.length<4)return;const re=new RegExp("\\b("+pt.replace(/[.*+?^${}()|[\]\\]/g,"\\$&").replace(/ /g,"\\s+")+")\\b","i");h=h.replace(re,m=>mode==="blank"?`<span class="blank" data-w="${esc(m)}">${m}</span>`:`<mark>${m}</mark>`)}))})}
+  if(mode==="hint"){const ws=s.split(" ");h=esc(ws.slice(0,3).join(" "))+" <span class='rest'>"+esc(ws.slice(3).join(" "))+"</span>"}
+  return`<span class="s" data-si="${si++}">${h}</span> `}).join("")+"</p>").join("");
+}
+function qview(id){go("q");const q=DB.find(x=>x.id===id),type=qType(q);
+ let mode=store.get("mode","show"),qsub=store.get("qsub",true);
+ const sents=splitSent(q.a.replace(/\n/g," "));
+ $("#app").innerHTML=`<button class="back" id="bk">← ${TOPICS[q.t].n}</button>
+ <div class="card"><div class="row" style="justify-content:space-between"><span><span class="lv ${q.lv}">${q.lv}</span><span class="sub">${TOPICS[q.t].n}</span></span>
+ <div class="seg" id="rate"><button data-r="0.8">느리게</button><button data-r="1">보통</button></div></div>
+ <div class="qtitle">${esc(q.k)}</div>
+ <div class="qen ${qsub?"":"hide"}" id="qen">${esc(q.q)}</div>
+ <div class="row" style="margin-top:12px"><button class="btn pri" id="pq">▶ 질문 듣기</button><button class="btn" id="qs">${qsub?"질문 자막 끄기":"질문 자막 켜기"}</button></div></div>
+
+ <div class="card"><div class="row" style="justify-content:space-between"><b>모범답변</b><div class="seg" id="md"><button data-m="show">자막</button><button data-m="hint">힌트</button><button data-m="blank">빈칸</button><button data-m="hid">가리기</button></div></div>
+ <div class="ans" id="ans"></div>
+ <div class="row"><button class="btn teal" id="pa">▶ 모범답변 듣기</button><button class="btn" id="st">■ 멈춤</button></div>
+ <div class="note" id="mnote"></div></div>
+
+ <div class="card"><b>내 답변 말하기</b><div class="note">질문을 듣고 🎤를 눌러 영어로 답하세요. 받아쓴 내용으로 채점해요. (직접 입력도 가능)</div>
+ <div class="row" style="margin:10px 0"><button class="btn rec0 acc" id="mic">🎤 말하기 시작</button><button class="btn" id="clr">지우기</button></div>
+ <div><textarea id="my" placeholder="여기에 내 답변이 받아써져요"></textarea><div class="note micnote hidden"></div></div>
+ <div class="row" style="margin-top:10px"><button class="btn pri" id="grade">채점하기</button><button class="btn needai hidden" id="aifb">AI 첨삭 받기</button></div>
+ <div id="res"></div></div>
+
+ <div class="card"><b>정답 해설</b><div class="tip" style="margin-top:10px">${TIPS[type]}</div>
+ <div class="xp" id="xp">${q.x.map(x=>`<div data-e="${esc(x[0])}"><b>${esc(x[0])}</b><span>${esc(x[1])}</span></div>`).join("")}</div></div>
+ <div class="row" style="justify-content:space-between;margin-top:4px"><button class="btn" id="prev">← 이전</button><button class="btn ${done.has(q.id)?"teal":""}" id="dn">${done.has(q.id)?"✓ 외웠어요":"외웠어요 표시"}</button><button class="btn" id="next">다음 →</button></div>`;
+ if(window.SAMPLE)$("#aifb").classList.remove("hidden");
+ const ans=$("#ans");
+ const draw=()=>{ans.className="ans "+(mode==="hid"?"hid":mode==="hint"?"hint":"");ans.innerHTML=renderAnswer(q,mode);
+  document.querySelectorAll("#md button").forEach(b=>b.classList.toggle("on",b.dataset.m===mode));
+  $("#mnote").textContent=mode==="hid"?"텍스트를 가렸어요. 듣기만 하거나 직접 말해 본 뒤, 문장을 눌러 하나씩 확인하세요.":mode==="hint"?"문장 앞 세 단어만 보여요. 나머지를 이어 말해 보고 문장을 눌러 확인하세요.":mode==="blank"?"핵심 표현이 빈칸이에요. 빈칸을 누르면 정답이 보여요.":"노란색이 핵심 표현이에요. 문장을 누르면 그 문장만 들려줘요.";
+  ans.querySelectorAll(".s").forEach(el=>el.onclick=e=>{if(e.target.classList.contains("blank")){e.target.classList.toggle("open");return}
+   if(mode==="hid"||mode==="hint"){if(!el.classList.contains("peek")){el.classList.add("peek");return}}
+   const i=+el.dataset.si;hl(i);speak([sents[i]],x=>hl(x>=0?i:-1))})};
+ const hl=i=>ans.querySelectorAll(".s").forEach(el=>el.classList.toggle("now",+el.dataset.si===i));
+ draw();
+ document.querySelectorAll("#md button").forEach(b=>b.onclick=()=>{mode=b.dataset.m;store.set("mode",mode);draw()});
+ const rb=()=>document.querySelectorAll("#rate button").forEach(b=>b.classList.toggle("on",+b.dataset.r===ssRate));rb();
+ document.querySelectorAll("#rate button").forEach(b=>b.onclick=()=>{ssRate=+b.dataset.r;store.set("rate",ssRate);rb()});
+ $("#pq").onclick=()=>speak(splitSent(q.q));
+ $("#qs").onclick=()=>{qsub=!qsub;store.set("qsub",qsub);$("#qen").classList.toggle("hide",!qsub);$("#qs").textContent=qsub?"질문 자막 끄기":"질문 자막 켜기"};
+ $("#qen").onclick=()=>{if(!qsub)$("#qen").classList.toggle("hide")};
+ $("#pa").onclick=()=>speak(sents,i=>hl(i));$("#st").onclick=()=>{stopSpeak();hl(-1)};
+ const my=$("#my");my.value=store.get("ans_"+q.id,"");my.oninput=()=>store.set("ans_"+q.id,my.value);
+ $("#mic").onclick=e=>micToggle(e.currentTarget,my);
+ $("#clr").onclick=()=>{my.value="";store.set("ans_"+q.id,"")};
+ $("#grade").onclick=()=>{const r=scoreAnswer(q,my.value);
+  document.querySelectorAll("#xp div").forEach(d=>d.classList.toggle("hit",r.hits.includes(d.dataset.e)));
+  const exprs=q.x.filter(x=>!hasKo(x[0]));
+  $("#res").innerHTML=r.n<3?`<div class="note" style="color:var(--bad)">답변이 너무 짧아요. 🎤로 말하거나 입력한 뒤 채점하세요.</div>`:
+  `<div class="score"><div><b>${r.lvl}</b>이 답변 예상 레벨</div><div><b>${r.n}</b>단어 ${q.lv==="Adv"?"(목표 130+)":"(목표 90+)"}</div><div><b>${r.hits.length}/${exprs.length}</b>핵심 표현</div><div><b>${r.conn}</b>연결어</div></div>
+  <div class="note" style="margin-top:8px">${feedback(r,q)}</div>`;
+  if(r.total>=62&&!done.has(q.id)){}
+ };
+ $("#aifb").onclick=()=>aiFeedback(q,my.value);
+ $("#dn").onclick=()=>{done.has(q.id)?done.delete(q.id):done.add(q.id);saveDone();$("#dn").classList.toggle("teal",done.has(q.id));$("#dn").textContent=done.has(q.id)?"✓ 외웠어요":"외웠어요 표시"};
+ const list=byTopic(q.t),ix=list.indexOf(q);
+ $("#prev").disabled=ix<=0;$("#next").disabled=ix>=list.length-1;
+ $("#prev").onclick=()=>qview(list[ix-1].id);$("#next").onclick=()=>qview(list[ix+1].id);
+ $("#bk").onclick=()=>topic(q.t);
+}
+function feedback(r,q){const f=[],type=qType(q);
+ if(r.n<(q.lv==="Adv"?100:70))f.push("분량이 부족해요. 예시나 감정 문장을 1~2개 더 붙여 보세요.");
+ if(r.conn<5)f.push("연결어(Anyway, You know, Plus, Looking back 등)를 더 넣으면 IH 이상 느낌이 나요.");
+ if(r.hits.length<2)f.push("모범답변의 핵심 표현(노란색)을 2~3개 이상 넣어 보세요.");
+ if((type==="past"||type==="rp13")&&r.total<60)f.push("경험 질문이니 과거시제(was, went, had)를 확실히 쓰세요.");
+ if(!f.length)f.push("좋아요! 이 정도 분량과 표현이면 IH~AL 수준이에요. 자막 없이 한 번 더 말해 보세요.");
+ return f.join(" ")}
+async function aiFeedback(q,text){const box=document.createElement("div");box.className="ai";box.textContent="AI가 첨삭 중…";$("#res").appendChild(box);
+ if(!text.trim()){box.textContent="먼저 답변을 말하거나 입력해 주세요.";return}
+ try{const r=await SAMPLE(`You are an OPIc speaking coach for a Korean learner targeting IH/AL. Question: "${q.q}"\nLearner's spoken answer (speech-to-text, ignore punctuation/capitalization issues): "${text}"\nReference model answer: "${q.a}"\n\nReply in Korean, concise, plain text (no markdown symbols). Format:\n예상 레벨: (one of NL NM NH IL IM1 IM2 IM3 IH AL)\n잘한 점: 1-2 lines\n고칠 점: up to 3 bullets with "- ", each quoting the learner's phrase and the corrected English\n업그레이드 문장: 2 natural English sentences the learner could add`,{onText:({text})=>{box.textContent=text},modelTier:"default"});box.textContent=r.text}catch(e){box.textContent=e&&e.code==="rate_limited"?"잠시 후 다시 시도해 주세요.":"AI 첨삭을 지금 쓸 수 없어요."}}
+
+/* ---------- 실전 모의고사 ---------- */
+let EX=null;
+const LEVELS=[["1","나는 10단어 이하의 단어로 말할 수 있습니다."],["2","나는 기본적인 물건, 색깔, 요일, 음식, 의류, 숫자 등을 말할 수 있습니다. 항상 완벽한 문장을 구사하지 못하고 간단한 질문도 하기 어렵습니다."],["3","나는 나 자신, 직장, 친한 사람과 장소, 일상에 대한 기본 정보를 간단한 문장으로 전달할 수 있습니다. 간단한 질문을 할 수 있습니다."],["4","나는 나 자신, 일상, 일/학교와 취미에 대해 간단한 대화를 할 수 있습니다. 친숙한 주제와 일상에 대해 쉽게 간단한 문장들을 만들 수 있습니다. 내가 원하는 정보를 얻기 위해 질문을 할 수 있습니다."],["5","나는 친숙한 주제와 가정, 일/학교, 개인 및 사회적 관심사에 대해 자신 있게 대화할 수 있습니다. 일어난 일과 일어나고 있는 일, 일어날 일에 대해 합리적으로 자세하게 말할 수 있습니다. 필요한 경우 설명도 할 수 있습니다. 일상 생활에서 예기치 못한 상황이 발생하더라도 임기응변으로 대처할 수 있습니다."],["6","나는 개인적, 사회적 또는 전문적 주제에 나의 의견을 제시하여 토론할 수 있습니다. 다양하고 어려운 주제에 대해 정확하고 상세한 설명을 제공할 수 있습니다."]];
+const SEL=["music","movies","coffee","bars","dtrip","vacation","shopping"];
+function mockStart(){go("mock");EX={sel:store.get("survey",["music","movies","coffee","dtrip"]),level:store.get("level","5")};
+ $("#app").innerHTML=`<header class="top"><div class="brand">실전<span>.</span>모의고사</div><div class="sub">약 40분</div></header>
+ <div class="card"><b>STEP 1 · Background Survey</b><div class="note">실제 시험처럼 선택한 주제에서 콤보 문제가 나와요. 공통형(집·음식점·해외여행·지형·전화기 등)은 돌발로 섞여요. 4개 이상 고르세요.</div>
+ <div class="chips" id="sv" style="margin-top:12px">${SEL.map(k=>`<button class="chip ${EX.sel.includes(k)?"on":""}" data-k="${k}">${TOPICS[k].n}</button>`).join("")}</div></div>
+ <div class="card"><b>STEP 2 · Self Assessment</b><div class="note">IH~AL 목표라면 보통 5단계(5-5)나 6단계를 골라요. 1~2단계는 최대 IM2 정도로 계산돼요.</div>
+ <div class="opt" id="lv" style="margin-top:12px">${LEVELS.map(([n,t])=>`<label class="${EX.level===n?"on":""}"><input type="radio" name="lv" value="${n}" ${EX.level===n?"checked":""}><span><b>${n}단계</b> ${t}</span></label>`).join("")}</div></div>
+ <div class="card"><b>진행 방식</b><div class="note" style="font-size:13.5px">· 질문은 텍스트 없이 음성으로만 나와요. 다시 듣기는 질문이 끝나고 5초 안에 1번만 가능해요.<br>· 🎤로 답하고 '다음'을 누르면 이전 문제로 돌아갈 수 없어요.<br>· 7번 뒤에 난이도를 다시 고를 수 있어요(쉽게/같게/어렵게).<br>· 끝나면 15문항을 채점해 예상 등급을 알려줘요.</div></div>
+ <button class="btn acc" id="go" style="width:100%;justify-content:center;padding:15px;font-size:16px">시험 시작</button>`;
+ document.querySelectorAll("#sv .chip").forEach(c=>c.onclick=()=>{const k=c.dataset.k;EX.sel.includes(k)?EX.sel=EX.sel.filter(x=>x!==k):EX.sel.push(k);c.classList.toggle("on")});
+ document.querySelectorAll("#lv input").forEach(r=>r.onchange=()=>{EX.level=r.value;document.querySelectorAll("#lv label").forEach(l=>l.classList.toggle("on",l.querySelector("input").checked))});
+ $("#go").onclick=()=>{if(EX.sel.length<2){alertBox("선택형 주제를 2개 이상 골라 주세요.");return}store.set("survey",EX.sel);store.set("level",EX.level);buildExam();examQ()};
+}
+function alertBox(m){const d=document.createElement("div");d.className="modal";d.innerHTML=`<div class="card"><div>${m}</div><button class="btn pri" style="margin-top:12px">확인</button></div>`;document.body.appendChild(d);d.querySelector("button").onclick=()=>d.remove()}
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const is14=q=>/14번/.test(q.k),is15=q=>/15번/.test(q.k);
+function combo(t){return byTopic(t).filter(q=>!is14(q)&&!is15(q)).slice(0,3)}
+function buildExam(){
+ const sel=shuffle(EX.sel.filter(t=>combo(t).length>=3));
+ const common=shuffle(["housing","restaurant","gather","otrip","geo","phone","internet","appliance"].filter(t=>combo(t).length>=3));
+ const t1=sel[0],t2=sel[1]||common[1],t3=common[0];
+ const rp=shuffle(["rp_concert","rp_furniture","rp_movie"])[0];
+ const used=[t1,t2,t3];
+ const adv=shuffle(Object.keys(TOPICS).filter(t=>!used.includes(t)&&byTopic(t).some(is14)&&byTopic(t).some(is15)));
+ const t4=adv[0];
+ EX.qs=[byTopic("intro")[0],...combo(t1),...combo(t2),...combo(t3),...byTopic(rp),byTopic(t4).find(is14),byTopic(t4).find(is15)];
+ EX.alt=shuffle(Object.keys(TOPICS).filter(t=>!used.includes(t)&&TOPICS[t].c!=="롤플레이"&&t!=="intro"));
+ EX.i=0;EX.ans=[];EX.dur=[];EX.end=Date.now()+40*60e3;EX.running=true;EX.re=null;
+}
+function clock(){if(!EX||!EX.running)return;const s=Math.max(0,Math.round((EX.end-Date.now())/1e3));const el=$("#clk");if(el)el.textContent=String(s/60|0).padStart(2,"0")+":"+String(s%60).padStart(2,"0");if(s<=0){EX.running=false;finish();return}setTimeout(clock,1000)}
+function examQ(){go("mock");const q=EX.qs[EX.i],n=EX.i+1;
+ $("#app").innerHTML=`<div class="exam"><div class="top"><span>Question <b style="color:#fff">${n}</b> of 15</span><span>남은 시간 <span class="clock" id="clk">40:00</span></span></div>
+ <div class="prog">${EX.qs.map((_,i)=>`<i class="${i<EX.i?"d":i===EX.i?"c":""}"></i>`).join("")}</div>
+ <div class="ava" id="ava"></div><div class="qno">Q${n}<small id="qst">▶ 버튼을 눌러 질문을 들으세요</small></div>
+ <div class="row" style="justify-content:center;margin:14px 0"><button class="btn acc" id="play">▶ Play</button><button class="btn" id="rep" disabled>↻ 다시 듣기 (1회)</button></div>
+ <div style="margin-top:auto"><div class="row" style="margin-bottom:8px"><button class="btn" id="mic" disabled>🎤 말하기 시작</button><span class="note" id="tm"></span></div>
+ <div><textarea id="my" placeholder="답변이 여기에 받아써져요 (키보드 음성 입력도 가능)"></textarea><div class="note micnote hidden"></div></div>
+ <div class="row" style="justify-content:space-between;margin-top:10px"><button class="btn" id="showq" style="font-size:12px">질문이 안 들려요</button><button class="btn acc" id="nx">다음 ›</button></div>
+ <div class="note hidden" id="qtxt" style="margin-top:8px"></div></div></div>`;
+ clock();
+ const ava=$("#ava");let played=false,replayed=false,repTimer=null,t0=null;
+ const playQ=()=>{ava.classList.add("talk");$("#qst").textContent="질문 재생 중…";return speak(splitSent(q.q)).then(()=>{ava.classList.remove("talk");$("#qst").textContent="답변하세요";$("#mic").disabled=false})};
+ $("#play").onclick=()=>{if(played)return;played=true;$("#play").disabled=true;playQ().then(()=>{if(replayed)return;$("#rep").disabled=false;repTimer=setTimeout(()=>{$("#rep").disabled=true;$("#rep").textContent="다시 듣기 시간 지남"},5000)})};
+ $("#rep").onclick=()=>{if(replayed)return;replayed=true;clearTimeout(repTimer);$("#rep").disabled=true;playQ()};
+ $("#showq").onclick=()=>{$("#qtxt").classList.remove("hidden");$("#qtxt").textContent=q.q+"  (실제 시험에서는 텍스트가 나오지 않아요)"};
+ const my=$("#my");
+ $("#mic").onclick=e=>{if(!t0){t0=Date.now();tick()}micToggle(e.currentTarget,my)};
+ my.addEventListener("input",()=>{if(!t0){t0=Date.now();tick()}});
+ function tick(){if(!$("#tm")||!t0)return;const s=Math.round((Date.now()-t0)/1e3);$("#tm").textContent=`답변 ${s/60|0}:${String(s%60).padStart(2,"0")} · ${words(my.value).length}단어`;setTimeout(tick,1000)}
+ $("#nx").onclick=()=>{try{D&&D.stop()}catch(e){}try{webRec&&webRec.stop()}catch(e){}stopSpeak();
+  EX.ans[EX.i]=my.value.trim();EX.dur[EX.i]=t0?Math.round((Date.now()-t0)/1e3):0;EX.i++;
+  if(EX.i===7&&!EX.re){return reassess()}
+  if(EX.i>=15){EX.running=false;return finish()}examQ()};
+}
+function reassess(){$("#app").innerHTML=`<div class="exam"><div class="qno" style="margin-top:30px">난이도 재조정<small>7번까지 끝났어요. 나머지 문제의 난이도를 고르세요.</small></div>
+ <div class="opt" style="margin-top:24px">${[["easy","쉬운 질문"],["same","비슷한 질문"],["hard","어려운 질문"]].map(([v,t])=>`<button class="btn ${v==="hard"?"acc":""}" data-v="${v}" style="justify-content:center;padding:14px">${t}</button>`).join("")}</div>
+ <div class="note" style="text-align:center;margin-top:14px">IH~AL을 노린다면 보통 '비슷한' 또는 '어려운'을 골라요.</div></div>`;
+ document.querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{EX.re=b.dataset.v;
+  if(EX.re==="easy"){const t=EX.alt.find(t=>combo(t).length>=2);if(t){const c=combo(t);EX.qs[13]=c[0];EX.qs[14]=c[1]}}
+  examQ()});
+}
+function finish(){go("mock");
+ const res=EX.qs.map((q,i)=>({q,a:EX.ans[i]||"",d:EX.dur[i]||0,r:scoreAnswer(q,EX.ans[i]||"")}));
+ const scored=res.slice(1);let avg=scored.reduce((s,x)=>s+x.r.total,0)/scored.length;
+ const lv=+EX.level;if(EX.re==="easy")avg-=3;if(EX.re==="hard")avg+=2;
+ let g=toGrade(avg);const cap=lv<=2?"IM2":lv<=3?"IH":"AL";if(LADDER.indexOf(g)>LADDER.indexOf(cap))g=cap;
+ const answered=scored.filter(x=>x.r.n>=3).length;
+ store.set("lastGrade",{g,at:Date.now()});
+ const tw=scored.reduce((s,x)=>s+x.r.n,0);
+ $("#app").innerHTML=`<header class="top"><div class="brand">결과<span>.</span></div><div class="sub">자가진단 ${EX.level}단계 · ${EX.re==="hard"?"어렵게":EX.re==="easy"?"쉽게":"같게"}</div></header>
+ <div class="card" style="text-align:center"><div class="sub">예상 등급</div><div class="grade">${g}</div>
+ <div class="ladder">${LADDER.map(l=>`<span class="${l===g?"on":""}">${l}</span>`).join("")}</div>
+ <div class="score"><div><b>${Math.round(avg)}</b>평균 점수</div><div><b>${answered}/14</b>답변한 문항</div><div><b>${Math.round(tw/Math.max(answered,1))}</b>평균 단어 수</div></div>
+ <div class="note" style="margin-top:10px">분량·연결어·어휘 다양성·시제·질문 관련성·핵심표현을 기준으로 계산한 추정치예요. 발음·억양은 반영되지 않아요. 자기소개(1번)는 실제 시험처럼 채점에서 빠져요.</div>
+ <div class="row" style="justify-content:center;margin-top:12px"><button class="btn pri needai ${window.SAMPLE?"":"hidden"}" id="ai">AI 정밀 채점</button><button class="btn acc" id="again">다시 응시</button></div>
+ <div id="aibox"></div></div>
+ <div class="card"><b>문항별 결과</b>${res.map((x,i)=>`<div class="rq"><div class="h"><span>Q${i+1}. ${esc(x.q.k)}</span><span class="pill">${i===0?"채점 제외":x.r.lvl}</span></div>
+ <div class="t">${x.a?esc(x.a):"<i>답변 없음</i>"}</div><div class="note">${x.r.n}단어 · ${x.d}초 · 핵심표현 ${x.r.hits.length}개</div>
+ <button class="btn" style="margin-top:6px;font-size:12px" data-q="${x.q.id}">모범답변·해설 보기</button></div>`).join("")}</div>`;
+ document.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>qview(b.dataset.q));
+ $("#again").onclick=mockStart;
+ const ai=$("#ai");if(ai)ai.onclick=async()=>{const box=$("#aibox");box.className="ai";box.textContent="AI가 15문항을 채점 중…";ai.disabled=true;
+  const body=res.map((x,i)=>`Q${i+1} [${x.q.k}] ${x.q.q}\nA${i+1}: ${x.a||"(no answer)"}`).join("\n\n");
+  try{const r=await SAMPLE(`You are a certified OPIc rater. The candidate chose self-assessment level ${EX.level}. Below are 15 questions and the candidate's answers (speech-to-text, so ignore punctuation/capitalization). Q1 is self-introduction and is not rated. Rate holistically using ACTFL OPIc criteria (task/function, text type, accuracy, consistency, length). Reply in Korean, plain text, no markdown symbols:\n예상 등급: (NL/NM/NH/IL/IM1/IM2/IM3/IH/AL)\n총평: 2-3 lines\n강점: 2 bullets with "- "\n약점과 해결법: 3 bullets with "- "\n다음 시험까지 할 일: 3 bullets with "- "\n\n${body}`,{onText:({text})=>{box.textContent=text},modelTier:"complex"});box.textContent=r.text}catch(e){box.textContent="AI 채점을 지금 쓸 수 없어요."}ai.disabled=false};
+}
+initCaps();home();
+</script>
+</body>
+</html>
